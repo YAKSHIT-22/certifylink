@@ -13,7 +13,7 @@ CertifyLink is a powerful certificate distribution and validation platform built
 
 Follow these steps to get started with CertifyLink:
 
-1. Clone the repository: `git clone https://github.com/your-username/CertifyLink.git`
+1. Clone the repository: `git clone https://github.com/YAKSHIT-22/CertifyLink.git`
 2. Install dependencies: `npm install`
 3. Configure your email settings in `config.js`.
 4. Customize certificate templates in the `templates` folder.
