@@ -1,0 +1,12 @@
+{
+  "name": "certifylink",
+  "version": "1.0.0",
+  "description": "this is the server for certifylink",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
