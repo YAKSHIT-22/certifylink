@@ -15,19 +15,19 @@ const ContactSection = () => {
     <section className="flex items-center justify-center min-h-[100dvh] w-full p-2">
       <div className="max-w-screen-2xl mx-auto w-full flex items-center justify-center p-2 s:p-6">
         <div className="flex items-center justify-center w-full p-2">
-          <div className="flex items-center justify-center lg:flex-row flex-col-reverse gap-8">
+          <div className="flex items-center justify-center lg:flex-row flex-col-reverse">
             <div className="flex items-start lg:pl-28 p-2 justify-center w-full flex-col h-full gap-3">
               <div className="flex items-center justify-center gap-1">
                 <div className="h-4 w-4 bg-purple-800 rounded-full"></div>
                 <div className="h-4 w-4 bg-[#ffffff] rounded-full"></div>
               </div>
-              <div className="flex items-start justify-center flex-col">
+              <div className="flex w-full items-start justify-center flex-col">
                 <h1 className="text-3xl sm:text-5xl xl:text-6xl text-white font-bold">
                   Contact Us <br />
                   Any Query Let's Connect!
                 </h1>
               </div>
-              <form onSubmit={handleSubmit} id="contact" className="flex w-[90%] items-start justify-center flex-col font-light py-2 text-[#f4f4f4] gap-2">
+              <form onSubmit={handleSubmit} id="contact" className="flex w-full md:w-[90%] items-start justify-center flex-col font-light py-2 text-[#f4f4f4] gap-2">
                 <div className="flex w-full items-start justify-center flex-col gap-2">
                   <label class="text-sm">Name</label>
                   <input
