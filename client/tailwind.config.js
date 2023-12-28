@@ -1,7 +1,10 @@
 /** @type {import('tailwindcss').Config} */
-const {nextui} = require("@nextui-org/react");
+const { nextui } = require("@nextui-org/react");
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}", "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     screens: {
       xxs: "300px",
@@ -45,25 +48,24 @@ module.exports = {
           "100%": { opacity: 100 },
         },
         marquee: {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-100%)' },
-          
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-100%)" },
         },
         marquee2: {
-          '0%': { transform: 'translateX(100%)' },
-          '100%': { transform: 'translateX(0%)' },
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0%)" },
         },
       },
       animation: {
         fadeIn: "fadeIn 0.2s ease-in-out forwards",
-        marquee: 'marquee 15s linear infinite',
-      marquee2: 'marquee2 15s linear infinite',
+        marquee: "marquee 15s linear infinite",
+        marquee2: "marquee2 15s linear infinite",
       },
     },
   },
   plugins: [
     require("tailwindcss-debug-screens"),
-    require('@tailwindcss/typography'),
+    require("@tailwindcss/typography"),
     require("@tailwindcss/forms"),
     nextui(),
   ],
