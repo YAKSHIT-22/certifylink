@@ -9,10 +9,11 @@ import {
   } from "@nextui-org/react";
 const TableContainer = ({aria,columns,users,id,renderCell}) => {
   return (
-    <Table aria-label={aria}>
-        <TableHeader columns={columns}>
+    <Table aria-label={aria} style={{backgroundColor:"#181818",color:"#ffffff"}}>
+        <TableHeader columns={columns} style={{backgroundColor:"#353535"}}>
           {(column) => (
             <TableColumn
+              style={{backgroundColor:"#353535"}}
               key={column.uid}
               align={column.uid === "actions" ? "center" : "start"}
             >
