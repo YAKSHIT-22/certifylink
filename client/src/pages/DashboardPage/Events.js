@@ -4,29 +4,28 @@ import { SlRefresh } from 'react-icons/sl'
 import { CiCirclePlus } from 'react-icons/ci'
 import TableContainer from '../../components/containers/TableContainer'
 import { Tooltip } from "@nextui-org/react";
-import { FaEdit } from "react-icons/fa";
-import { MdOutlineDelete } from "react-icons/md";
+import { FaEdit, FaRegCreditCard } from "react-icons/fa";
+import { MdOutlineAccessTime, MdOutlineDateRange, MdOutlineDelete } from "react-icons/md";
+import ModalContainer from '../../components/containers/ModalContainer'
 
 
 
 const columns = [
-  { name: "Event ID", uid: "eventsid" },
-  { name: "Events Name", uid: "eventsname" },
+  { name: "Event ID", uid: "eventid" },
+  { name: "Events Name", uid: "eventname" },
   { name: "Address", uid: "address" },
   { name: "Type", uid: "type" },
   { name: "Start", uid: "start" },
-  { name: "End", uid: "end" },
   { name: "Actions", uid: "actions" },
 ];
 
 const users = [
   {
-    eventsid: "#20462",
-    eventsname: "lorem ipsum",
+    eventid: "#20462",
+    eventname: "lorem ipsum",
     address: "Online",
     type: "Workshop",
     start: "2023-12-11",
-    end: "2023-12-11",
   },
 ];
 
@@ -41,20 +40,13 @@ const Events = () => {
       isOpen: true,
     });
     if (action === "edit") {
-      // const user = users.find((user) => user.roomid === id);
-      // setForm({
-      //   roomId: user.roomid,
-      //   roomName: user.roomname,
-      //   location: user.location,
-      //   description: user.description,
-      // });
       setForm({
         ...form,
-        boardroomId: id,
+        eventId: id,
       });
     } else if (action === "delete") {
       setForm({
-        boardroomId: id,
+        eventId: id,
       });
     }
   };
@@ -66,16 +58,31 @@ const Events = () => {
     });
     setForm({});
   };
+  const handleSubmit = (e) => {
+    if(isActionModalOpen.action==='edit'){
+      e.preventDefault();
+      console.log("edit")
+    }
+    else if(isActionModalOpen.action==='add'){
+      e.preventDefault()
+      console.log("add")
+    }else if(isActionModalOpen.action==='delete'){
+      console.log("delete")
+    }
+  }
+  const handleInputChange=()=>{
+      
+  }
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
-      case "eventsid":
+      case "eventid":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "eventsname":
+      case "eventname":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
@@ -111,7 +118,7 @@ const Events = () => {
             <Tooltip content="Edit user">
               <span
                 onClick={() =>
-                  handleActionsModal({ action: "edit", id: user.boardroomid })
+                  handleActionsModal({ action: "edit", id: user.eventid })
                 }
                 className="text-lg text-default-400 cursor-pointer active:opacity-50"
               >
@@ -121,7 +128,7 @@ const Events = () => {
             <Tooltip color="danger" content="Delete user">
               <span
                 onClick={() =>
-                  handleActionsModal({ action: "delete", id: user.boardroomid })
+                  handleActionsModal({ action: "delete", id: user.eventid })
                 }
                 className="text-lg text-danger cursor-pointer active:opacity-50"
               >
@@ -146,6 +153,9 @@ const Events = () => {
               </button>
               <button
                 type="button"
+                onClick={() =>
+                  handleActionsModal({ action: "add"})
+                }
                 className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2"
               >
                 Add
@@ -157,13 +167,81 @@ const Events = () => {
             <TableContainer
               aria={"Events Table"}
               columns={columns}
-              id={"eventsid"}
+              id={"eventid"}
               users={users}
               renderCell={renderCell}
             />
           </div>
         </div>
       </div>
+      <ModalContainer
+        heading={isActionModalOpen.action === "edit" ? "Edit Events" : isActionModalOpen.action === "add" ? "Add Events" : "Delete Events"}
+        isOpen={isActionModalOpen.isOpen} 
+        onClose={handleActionsModalClose}
+        cta={isActionModalOpen.action === "edit" ? "Edit Events" : isActionModalOpen.action === "add" ? "Add Events" : "Delete Events"}
+        formid={isActionModalOpen.action === "edit" ? "editevents" : isActionModalOpen.action === "add" ? "addevents" : "deleteevents"}
+        onSubmit={handleSubmit}
+        ctaClass={isActionModalOpen.action === "delete" ? "danger" : "primary"}
+        scrollBehavior=""
+        modalClass="text-white"
+        enableFooter={true}
+      >
+        {isActionModalOpen.action === "delete" ? (
+          <div className="w-full flex items-center justify-center">
+            <p className="p-2 text-center flex items-center justify-center font-bold">
+              Are you sure you want to delete this room
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="w-full flex items-center justify-center gap-1 flex-col">
+              <h1 className="capitalize text-sm font-medium">
+                {isActionModalOpen.action === "add"
+                  ? "Add Event Details"
+                  : "Edit Event Details"}
+              </h1>
+              <p className="capitalize text-xs text-[#b3b3b3]">
+                *all fields are required!
+              </p>
+            </div>
+            <form id="editevents" onSubmit={handleSubmit} className="flex items-center justify-center gap-4 flex-col">
+              <div className="flex items-center justify-center gap-4 w-full flex-row">
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <MdOutlineDateRange className="w-6 h-6 text-[#9c9c9c]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#9C9C9C] rounded-[8px] focus:outline-none"
+                    placeholder="Event Name"
+                    onChange={handleInputChange}
+                    value={form.eventname || ""}
+                    name="eventname"
+                    required
+                  />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <MdOutlineAccessTime className="w-6 h-6 text-[#9c9c9c]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#9C9C9C] rounded-[8px] focus:outline-none"
+                    placeholder="Address"
+                    onChange={handleInputChange}
+                    value={form.address || ""}
+                    name="address"
+                    required
+                  />
+                </div>
+              </div>
+              
+             
+            </form>
+          </>
+        )}
+
+      </ModalContainer>
     </DashboardContainer>
   )
 }

@@ -5,7 +5,8 @@ import { SlRefresh } from "react-icons/sl";
 import TableContainer from "../../components/containers/TableContainer";
 import { Tooltip } from "@nextui-org/react";
 import { FaEdit } from "react-icons/fa";
-import { MdOutlineDelete } from "react-icons/md";
+import { MdOutlineAccessTime, MdOutlineDateRange, MdOutlineDelete } from "react-icons/md";
+import ModalContainer from "../../components/containers/ModalContainer";
 
 const columns = [
   { name: "Organizational ID", uid: "organizationid" },
@@ -60,6 +61,18 @@ const Organisations = () => {
     });
     setForm({});
   };
+  const handleSubmit = (e) => {
+    if (isActionModalOpen.action === "edit") {
+      e.preventDefault();
+      console.log("edit");
+    } else if (isActionModalOpen.action === "add") {
+      e.preventDefault();
+      console.log("add");
+    } else if (isActionModalOpen.action === "delete") {
+      console.log("delete");
+    }
+  };
+  const handleInputChange = () => {};
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
@@ -100,7 +113,7 @@ const Organisations = () => {
             <Tooltip content="Edit user">
               <span
                 onClick={() =>
-                  handleActionsModal({ action: "edit", id: user.boardroomid })
+                  handleActionsModal({ action: "edit", id: user.organizationid })
                 }
                 className="text-lg text-default-400 cursor-pointer active:opacity-50"
               >
@@ -110,7 +123,7 @@ const Organisations = () => {
             <Tooltip color="danger" content="Delete user">
               <span
                 onClick={() =>
-                  handleActionsModal({ action: "delete", id: user.boardroomid })
+                  handleActionsModal({ action: "delete", id: user.organizationid })
                 }
                 className="text-lg text-danger cursor-pointer active:opacity-50"
               >
@@ -135,6 +148,9 @@ const Organisations = () => {
               </button>
               <button
                 type="button"
+                onClick={() =>
+                  handleActionsModal({ action: "add"})
+                }
                 className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2"
               >
                 Add
@@ -153,6 +169,93 @@ const Organisations = () => {
           </div>
         </div>
       </div>
+      <ModalContainer
+        heading={
+          isActionModalOpen.action === "edit"
+            ? "Edit Organization"
+            : isActionModalOpen.action === "add"
+            ? "Add Organization"
+            : "Delete Organization"
+        }
+        isOpen={isActionModalOpen.isOpen}
+        onClose={handleActionsModalClose}
+        cta={
+          isActionModalOpen.action === "edit"
+            ? "Edit Organization"
+            : isActionModalOpen.action === "add"
+            ? "Add Organization"
+            : "Delete Organization"
+        }
+        formid={
+          isActionModalOpen.action === "edit"
+            ? "editorganization"
+            : isActionModalOpen.action === "add"
+            ? "addorganization"
+            : "deleteorganization"
+        }
+        onSubmit={handleSubmit}
+        ctaClass={isActionModalOpen.action === "delete" ? "danger" : "primary"}
+        scrollBehavior=""
+        modalClass="text-white"
+        enableFooter={true}
+      >
+        {isActionModalOpen.action === "delete" ? (
+          <div className="w-full flex items-center justify-center">
+            <p className="p-2 text-center flex items-center justify-center font-bold">
+              Are you sure you want to delete this room
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="w-full flex items-center justify-center gap-1 flex-col">
+              <h1 className="capitalize text-sm font-medium">
+                {isActionModalOpen.action === "add"
+                  ? "Add Event Details"
+                  : "Edit Event Details"}
+              </h1>
+              <p className="capitalize text-xs text-[#b3b3b3]">
+                *all fields are required!
+              </p>
+            </div>
+            <form
+              id="editevents"
+              onSubmit={handleSubmit}
+              className="flex items-center justify-center gap-4 flex-col"
+            >
+              <div className="flex items-center justify-center gap-4 w-full flex-row">
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <MdOutlineDateRange className="w-6 h-6 text-[#9c9c9c]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#9C9C9C] rounded-[8px] focus:outline-none"
+                    placeholder="Event Name"
+                    onChange={handleInputChange}
+                    value={form.eventname || ""}
+                    name="eventname"
+                    required
+                  />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <MdOutlineAccessTime className="w-6 h-6 text-[#9c9c9c]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#9C9C9C] rounded-[8px] focus:outline-none"
+                    placeholder="Address"
+                    onChange={handleInputChange}
+                    value={form.address || ""}
+                    name="address"
+                    required
+                  />
+                </div>
+              </div>
+            </form>
+          </>
+        )}
+      </ModalContainer>
     </DashboardContainer>
   );
 };
