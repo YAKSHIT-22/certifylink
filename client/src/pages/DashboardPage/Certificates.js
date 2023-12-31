@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
-import DashboardContainer from '../../components/containers/DashboardContainer'
-import { SlRefresh } from 'react-icons/sl'
-import { MdUpload } from 'react-icons/md'
-import TableContainer from '../../components/containers/TableContainer'
+import React, { useEffect, useState } from "react";
+import DashboardContainer from "../../components/containers/DashboardContainer";
+import { SlRefresh } from "react-icons/sl";
+import { MdUpload } from "react-icons/md";
+import TableContainer from "../../components/containers/TableContainer";
 import { Tooltip } from "@nextui-org/react";
 import { FaEdit } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
-
+import ModalContainer from "../../components/containers/ModalContainer";
+import { GrCertificate } from "react-icons/gr";
+import { PiStudent } from "react-icons/pi";
+import { CiMobile3 } from "react-icons/ci";
+import { FaRegAddressCard } from "react-icons/fa6";
+import { MdEventNote } from "react-icons/md";
 
 const columns = [
   { name: "Certificate ID", uid: "certificateid" },
@@ -28,9 +33,33 @@ const users = [
 ];
 
 const Certificates = () => {
-  
   const [isActionModalOpen, setActionModal] = useState({});
   const [form, setForm] = useState({});
+  const [csv, setCsvUpload] = useState({});
+
+  const handleFileChange = (e) => {
+    setCsvUpload({
+      file: e.target.files[0],
+      uploaded: true,
+    });
+  };
+
+  useEffect(() => {
+    if (csv.uploaded) {
+      console.log("Upload initiated");
+
+      // setCsvUpload({  })
+    }
+  }, [csv.uploaded]);
+
+  const handleSubmit = (e) => {
+    if (isActionModalOpen.action === "edit") {
+      e.preventDefault();
+      console.log("edit");
+    } else if (isActionModalOpen.action === "delete") {
+      console.log("delete");
+    }
+  };
   const handleActionsModal = ({ action, id = 0 }) => {
     setActionModal({
       ...isActionModalOpen,
@@ -38,13 +67,6 @@ const Certificates = () => {
       isOpen: true,
     });
     if (action === "edit") {
-      // const user = users.find((user) => user.roomid === id);
-      // setForm({
-      //   roomId: user.roomid,
-      //   roomName: user.roomname,
-      //   location: user.location,
-      //   description: user.description,
-      // });
       setForm({
         ...form,
         boardroomId: id,
@@ -54,6 +76,12 @@ const Certificates = () => {
         boardroomId: id,
       });
     }
+  };
+  const handleInputChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   };
   const handleActionsModalClose = () => {
     setActionModal({
@@ -100,12 +128,12 @@ const Certificates = () => {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Edit user">
+            <Tooltip content="Edit user" className="!text-white">
               <span
                 onClick={() =>
-                  handleActionsModal({ action: "edit", id: user.boardroomid })
+                  handleActionsModal({ action: "edit", id: user.certificateid })
                 }
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                className="text-lg text-white cursor-pointer active:opacity-50"
               >
                 <FaEdit />
               </span>
@@ -113,7 +141,10 @@ const Certificates = () => {
             <Tooltip color="danger" content="Delete user">
               <span
                 onClick={() =>
-                  handleActionsModal({ action: "delete", id: user.boardroomid })
+                  handleActionsModal({
+                    action: "delete",
+                    id: user.certificateid,
+                  })
                 }
                 className="text-lg text-danger cursor-pointer active:opacity-50"
               >
@@ -136,13 +167,22 @@ const Certificates = () => {
               <button type="button">
                 <SlRefresh className="w-5 h-5 hover:rotate-[180deg] transition-all" />
               </button>
-              <button
-                type="button"
+              <label
+                htmlFor="upload"
                 className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2"
               >
-                Upload
+                {csv.uploaded ? "File Upload Done" : "Upload"}
                 <MdUpload className="w-4 h-4" />
-              </button>
+                <input
+                  hidden
+                  type="file"
+                  multiple={false}
+                  accept=".xlsx,.csv"
+                  id="upload"
+                  name="upload"
+                  onChange={handleFileChange}
+                />
+              </label>
             </div>
           </div>
           <div className="flex items-center justify-center w-full h-full gap-4 flex-col">
@@ -156,8 +196,129 @@ const Certificates = () => {
           </div>
         </div>
       </div>
+      <ModalContainer
+        heading={
+          isActionModalOpen.action === "edit"
+            ? "Edit Details"
+            : "Delete Student"
+        }
+        isOpen={isActionModalOpen.isOpen}
+        onClose={handleActionsModalClose}
+        cta={
+          isActionModalOpen.action === "edit"
+            ? "Edit Student Details"
+            : "Delete Student"
+        }
+        formid={
+          isActionModalOpen.action === "edit"
+            ? "editstudentdetails"
+            : "deletestudent"
+        }
+        onSubmit={handleSubmit}
+        ctaClass={isActionModalOpen.action === "delete" ? "danger" : "primary"}
+        scrollBehavior=""
+        modalClass="text-white"
+        enableFooter={true}
+      >
+        {isActionModalOpen.action === "delete" ? (
+          <div className="w-full flex items-center justify-center">
+            <p className="p-2 text-center flex items-center justify-center font-bold">
+              Are you sure you want to delete this student
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="w-full flex items-center justify-center gap-1 flex-col py-2">
+              <h1 className="capitalize text-sm font-medium">
+                {"Edit Students Details"}
+              </h1>
+              <p className="capitalize text-xs text-[#b3b3b3]">
+                *all fields are required!
+              </p>
+            </div>
+            <form
+              id="editstudentdetails"
+              onSubmit={handleSubmit}
+              className="flex items-center justify-center gap-4 flex-col"
+            >
+              <div className="flex items-center justify-center gap-4 w-full flex-col">
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <GrCertificate className="w-6 h-6 text-[#808080]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Certificate Id"
+                    onChange={handleInputChange}
+                    value={form.certificateid || ""}
+                    name="certificateid"
+                    required
+                  />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <PiStudent className="w-6 h-6 text-[#808080]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Student Name"
+                    onChange={handleInputChange}
+                    value={form.studentname || ""}
+                    name="studentname"
+                    required
+                  />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <CiMobile3 className="w-6 h-6 text-[#808080]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Student Mobile"
+                    onChange={handleInputChange}
+                    value={form.studentmobile || ""}
+                    name="studentmobile"
+                    required
+                  />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <FaRegAddressCard className="w-6 h-6 text-[#808080]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Student Roll"
+                    onChange={handleInputChange}
+                    value={form.studentroll || ""}
+                    name="studentroll"
+                    required
+                  />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <MdEventNote className="w-6 h-6 text-[#808080]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Event Name"
+                    onChange={handleInputChange}
+                    value={form.eventname || ""}
+                    name="eventname"
+                    required
+                  />
+                </div>
+              </div>
+            </form>
+          </>
+        )}
+      </ModalContainer>
     </DashboardContainer>
-  )
-}
+  );
+};
 
-export default Certificates
+export default Certificates;

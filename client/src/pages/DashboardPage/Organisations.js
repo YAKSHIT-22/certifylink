@@ -5,8 +5,13 @@ import { SlRefresh } from "react-icons/sl";
 import TableContainer from "../../components/containers/TableContainer";
 import { Tooltip } from "@nextui-org/react";
 import { FaEdit } from "react-icons/fa";
-import { MdOutlineAccessTime, MdOutlineDateRange, MdOutlineDelete } from "react-icons/md";
+import { MdOutlineDelete,MdOutlineMailOutline } from "react-icons/md";
 import ModalContainer from "../../components/containers/ModalContainer";
+import { GoOrganization } from "react-icons/go";
+import { CiMobile3 } from "react-icons/ci";
+import { LuClipboardType } from "react-icons/lu";
+
+
 
 const columns = [
   { name: "Organizational ID", uid: "organizationid" },
@@ -110,12 +115,12 @@ const Organisations = () => {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Edit user">
+            <Tooltip content="Edit user" className='!text-white'>
               <span
                 onClick={() =>
                   handleActionsModal({ action: "edit", id: user.organizationid })
                 }
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                className="text-lg text-white cursor-pointer active:opacity-50"
               >
                 <FaEdit />
               </span>
@@ -207,47 +212,75 @@ const Organisations = () => {
           </div>
         ) : (
           <>
-            <div className="w-full flex items-center justify-center gap-1 flex-col">
+            <div className="w-full flex items-center justify-center gap-1 flex-col py-2">
               <h1 className="capitalize text-sm font-medium">
                 {isActionModalOpen.action === "add"
-                  ? "Add Event Details"
-                  : "Edit Event Details"}
+                  ? "Add Organization Details"
+                  : "Edit Organization Details"}
               </h1>
               <p className="capitalize text-xs text-[#b3b3b3]">
                 *all fields are required!
               </p>
             </div>
             <form
-              id="editevents"
+              id="editorganization"
               onSubmit={handleSubmit}
               className="flex items-center justify-center gap-4 flex-col"
             >
-              <div className="flex items-center justify-center gap-4 w-full flex-row">
+              <div className="flex items-center justify-center gap-4 w-full flex-col">
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <MdOutlineDateRange className="w-6 h-6 text-[#9c9c9c]" />
+                    <GoOrganization className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
-                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#9C9C9C] rounded-[8px] focus:outline-none"
-                    placeholder="Event Name"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Organization Name"
                     onChange={handleInputChange}
-                    value={form.eventname || ""}
-                    name="eventname"
+                    value={form.organizationname || ""}
+                    name="organizationname"
                     required
                   />
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <MdOutlineAccessTime className="w-6 h-6 text-[#9c9c9c]" />
+                    <MdOutlineMailOutline className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
-                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#9C9C9C] rounded-[8px] focus:outline-none"
-                    placeholder="Address"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Email"
                     onChange={handleInputChange}
-                    value={form.address || ""}
-                    name="address"
+                    value={form.email || ""}
+                    name="email"
+                    required
+                  />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <LuClipboardType className="w-6 h-6 text-[#808080]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Organisation Type"
+                    onChange={handleInputChange}
+                    value={form.type || ""}
+                    name="type"
+                    required
+                  />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <CiMobile3 className="w-6 h-6 text-[#808080]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Mobile No."
+                    onChange={handleInputChange}
+                    value={form.mobile || ""}
+                    name="mobile"
                     required
                   />
                 </div>

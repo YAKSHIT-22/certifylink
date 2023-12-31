@@ -1,21 +1,25 @@
-import React, { useState } from 'react'
-import DashboardContainer from '../../components/containers/DashboardContainer'
-import { SlRefresh } from 'react-icons/sl'
-import { CiCirclePlus } from 'react-icons/ci'
-import TableContainer from '../../components/containers/TableContainer'
+import React, { useState } from "react";
+import DashboardContainer from "../../components/containers/DashboardContainer";
+import { SlRefresh } from "react-icons/sl";
+import { CiCirclePlus } from "react-icons/ci";
+import TableContainer from "../../components/containers/TableContainer";
 import { Tooltip } from "@nextui-org/react";
-import { FaEdit, FaRegCreditCard } from "react-icons/fa";
-import { MdOutlineAccessTime, MdOutlineDateRange, MdOutlineDelete } from "react-icons/md";
-import ModalContainer from '../../components/containers/ModalContainer'
-
-
+import { FaEdit } from "react-icons/fa";
+import {
+  MdOutlineDelete,
+} from "react-icons/md";
+import ModalContainer from "../../components/containers/ModalContainer";
+import { MdEventNote } from "react-icons/md";
+import { FaRegAddressBook } from "react-icons/fa";
+import { LuClipboardType } from "react-icons/lu";
+import { BsCalendar2Date, BsCalendarDateFill } from "react-icons/bs";
 
 const columns = [
   { name: "Event ID", uid: "eventid" },
   { name: "Events Name", uid: "eventname" },
   { name: "Address", uid: "address" },
   { name: "Type", uid: "type" },
-  { name: "Start", uid: "start" },
+  { name: "Start Date", uid: "startdate" },
   { name: "Actions", uid: "actions" },
 ];
 
@@ -25,12 +29,11 @@ const users = [
     eventname: "lorem ipsum",
     address: "Online",
     type: "Workshop",
-    start: "2023-12-11",
+    startdate: "2023-12-11",
   },
 ];
 
 const Events = () => {
-
   const [isActionModalOpen, setActionModal] = useState({});
   const [form, setForm] = useState({});
   const handleActionsModal = ({ action, id = 0 }) => {
@@ -59,20 +62,17 @@ const Events = () => {
     setForm({});
   };
   const handleSubmit = (e) => {
-    if(isActionModalOpen.action==='edit'){
+    if (isActionModalOpen.action === "edit") {
       e.preventDefault();
-      console.log("edit")
+      console.log("edit");
+    } else if (isActionModalOpen.action === "add") {
+      e.preventDefault();
+      console.log("add");
+    } else if (isActionModalOpen.action === "delete") {
+      console.log("delete");
     }
-    else if(isActionModalOpen.action==='add'){
-      e.preventDefault()
-      console.log("add")
-    }else if(isActionModalOpen.action==='delete'){
-      console.log("delete")
-    }
-  }
-  const handleInputChange=()=>{
-      
-  }
+  };
+  const handleInputChange = () => {};
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
@@ -100,13 +100,7 @@ const Events = () => {
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "start":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-          </div>
-        );
-      case "end":
+      case "startdate":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
@@ -115,12 +109,12 @@ const Events = () => {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Edit user">
+            <Tooltip content="Edit user" className="!text-white">
               <span
                 onClick={() =>
                   handleActionsModal({ action: "edit", id: user.eventid })
                 }
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                className="text-lg !text-white cursor-pointer active:opacity-50"
               >
                 <FaEdit />
               </span>
@@ -153,9 +147,7 @@ const Events = () => {
               </button>
               <button
                 type="button"
-                onClick={() =>
-                  handleActionsModal({ action: "add"})
-                }
+                onClick={() => handleActionsModal({ action: "add" })}
                 className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2"
               >
                 Add
@@ -175,11 +167,29 @@ const Events = () => {
         </div>
       </div>
       <ModalContainer
-        heading={isActionModalOpen.action === "edit" ? "Edit Events" : isActionModalOpen.action === "add" ? "Add Events" : "Delete Events"}
-        isOpen={isActionModalOpen.isOpen} 
+        heading={
+          isActionModalOpen.action === "edit"
+            ? "Edit Events"
+            : isActionModalOpen.action === "add"
+            ? "Add Events"
+            : "Delete Events"
+        }
+        isOpen={isActionModalOpen.isOpen}
         onClose={handleActionsModalClose}
-        cta={isActionModalOpen.action === "edit" ? "Edit Events" : isActionModalOpen.action === "add" ? "Add Events" : "Delete Events"}
-        formid={isActionModalOpen.action === "edit" ? "editevents" : isActionModalOpen.action === "add" ? "addevents" : "deleteevents"}
+        cta={
+          isActionModalOpen.action === "edit"
+            ? "Edit Events"
+            : isActionModalOpen.action === "add"
+            ? "Add Events"
+            : "Delete Events"
+        }
+        formid={
+          isActionModalOpen.action === "edit"
+            ? "editevents"
+            : isActionModalOpen.action === "add"
+            ? "addevents"
+            : "deleteevents"
+        }
         onSubmit={handleSubmit}
         ctaClass={isActionModalOpen.action === "delete" ? "danger" : "primary"}
         scrollBehavior=""
@@ -194,7 +204,7 @@ const Events = () => {
           </div>
         ) : (
           <>
-            <div className="w-full flex items-center justify-center gap-1 flex-col">
+            <div className="w-full flex items-center justify-center gap-1 flex-col py-2">
               <h1 className="capitalize text-sm font-medium">
                 {isActionModalOpen.action === "add"
                   ? "Add Event Details"
@@ -204,15 +214,19 @@ const Events = () => {
                 *all fields are required!
               </p>
             </div>
-            <form id="editevents" onSubmit={handleSubmit} className="flex items-center justify-center gap-4 flex-col">
-              <div className="flex items-center justify-center gap-4 w-full flex-row">
+            <form
+              id="editevents"
+              onSubmit={handleSubmit}
+              className="flex items-center justify-center gap-4 flex-col"
+            >
+              <div className="flex items-center justify-center gap-4 w-full flex-col">
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <MdOutlineDateRange className="w-6 h-6 text-[#9c9c9c]" />
+                    <MdEventNote className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
-                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#9C9C9C] rounded-[8px] focus:outline-none"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Event Name"
                     onChange={handleInputChange}
                     value={form.eventname || ""}
@@ -222,11 +236,11 @@ const Events = () => {
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <MdOutlineAccessTime className="w-6 h-6 text-[#9c9c9c]" />
+                    <FaRegAddressBook className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
-                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#9C9C9C] rounded-[8px] focus:outline-none"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Address"
                     onChange={handleInputChange}
                     value={form.address || ""}
@@ -234,16 +248,55 @@ const Events = () => {
                     required
                   />
                 </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <LuClipboardType className="w-6 h-6 text-[#808080]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Event Type"
+                    onChange={handleInputChange}
+                    value={form.type || ""}
+                    name="type"
+                    required
+                  />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <BsCalendar2Date className="w-6 h-6 text-[#808080]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Start Date"
+                    onChange={handleInputChange}
+                    value={form.startdate || ""}
+                    name="startdate"
+                    required
+                  />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <BsCalendarDateFill className="w-6 h-6 text-[#808080]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="End Date"
+                    onChange={handleInputChange}
+                    value={form.enddate || ""}
+                    name="enddate"
+                    required
+                  />
+                </div>
               </div>
-              
-             
             </form>
           </>
         )}
-
       </ModalContainer>
     </DashboardContainer>
-  )
-}
+  );
+};
 
-export default Events
+export default Events;
