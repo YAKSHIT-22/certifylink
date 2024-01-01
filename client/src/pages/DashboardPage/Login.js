@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {FcGoogle} from 'react-icons/fc'
 import login from '../../assets/login.svg'
+
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [form, setFormValues] = useState({
@@ -10,13 +11,10 @@ const Login = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
-
-     
+      setLoading(true)
 
       setLoading(false);
       setFormValues({ email: "", password: "" });
-
       
     } catch (error) {
       setLoading(false);

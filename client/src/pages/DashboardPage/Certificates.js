@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
 import DashboardContainer from "../../components/containers/DashboardContainer";
-import { SlRefresh } from "react-icons/sl";
-import { MdUpload } from "react-icons/md";
 import TableContainer from "../../components/containers/TableContainer";
-import { Tooltip } from "@nextui-org/react";
-import { FaEdit } from "react-icons/fa";
-import { MdOutlineDelete } from "react-icons/md";
 import ModalContainer from "../../components/containers/ModalContainer";
-import { GrCertificate } from "react-icons/gr";
-import { PiStudent } from "react-icons/pi";
-import { CiMobile3 } from "react-icons/ci";
-import { FaRegAddressCard } from "react-icons/fa6";
-import { MdEventNote } from "react-icons/md";
+import { Tooltip } from "@nextui-org/react";
+import icon from "../../components/svgExporter";
+
 
 const columns = [
   { name: "Certificate ID", uid: "certificateid" },
@@ -135,7 +128,7 @@ const Certificates = () => {
                 }
                 className="text-lg text-white cursor-pointer active:opacity-50"
               >
-                <FaEdit />
+                <icon.FaEdit />
               </span>
             </Tooltip>
             <Tooltip color="danger" content="Delete user">
@@ -148,7 +141,7 @@ const Certificates = () => {
                 }
                 className="text-lg text-danger cursor-pointer active:opacity-50"
               >
-                <MdOutlineDelete />
+                <icon.MdOutlineDelete />
               </span>
             </Tooltip>
           </div>
@@ -165,14 +158,14 @@ const Certificates = () => {
             <p className="font-medium text-4xl">Upload Csv</p>
             <div className="flex items-center justify-end md:justify-center gap-4">
               <button type="button">
-                <SlRefresh className="w-5 h-5 hover:rotate-[180deg] transition-all" />
+                <icon.SlRefresh className="w-5 h-5 hover:rotate-[180deg] transition-all" />
               </button>
               <label
                 htmlFor="upload"
                 className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2"
               >
                 {csv.uploaded ? "File Upload Done" : "Upload"}
-                <MdUpload className="w-4 h-4" />
+                <icon.MdUpload className="w-4 h-4" />
                 <input
                   hidden
                   type="file"
@@ -244,7 +237,7 @@ const Certificates = () => {
               <div className="flex items-center justify-center gap-4 w-full flex-col">
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <GrCertificate className="w-6 h-6 text-[#808080]" />
+                    <icon.GrCertificate className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
@@ -258,7 +251,7 @@ const Certificates = () => {
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <PiStudent className="w-6 h-6 text-[#808080]" />
+                    <icon.PiStudent className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
@@ -272,7 +265,7 @@ const Certificates = () => {
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <CiMobile3 className="w-6 h-6 text-[#808080]" />
+                    <icon.CiMobile3 className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
@@ -286,7 +279,7 @@ const Certificates = () => {
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <FaRegAddressCard className="w-6 h-6 text-[#808080]" />
+                    <icon.FaRegAddressCard className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
@@ -300,7 +293,7 @@ const Certificates = () => {
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <MdEventNote className="w-6 h-6 text-[#808080]" />
+                    <icon.MdEventNote className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"

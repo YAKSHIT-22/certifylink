@@ -1,17 +1,9 @@
 import React, { useState } from "react";
 import DashboardContainer from "../../components/containers/DashboardContainer";
-import { CiCirclePlus } from "react-icons/ci";
-import { SlRefresh } from "react-icons/sl";
 import TableContainer from "../../components/containers/TableContainer";
-import { Tooltip } from "@nextui-org/react";
-import { FaEdit } from "react-icons/fa";
-import { MdOutlineDelete,MdOutlineMailOutline } from "react-icons/md";
 import ModalContainer from "../../components/containers/ModalContainer";
-import { GoOrganization } from "react-icons/go";
-import { CiMobile3 } from "react-icons/ci";
-import { LuClipboardType } from "react-icons/lu";
-
-
+import { Tooltip } from "@nextui-org/react";
+import icon from "../../components/svgExporter";
 
 const columns = [
   { name: "Organizational ID", uid: "organizationid" },
@@ -115,24 +107,30 @@ const Organisations = () => {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Edit user" className='!text-white'>
+            <Tooltip content="Edit user" className="!text-white">
               <span
                 onClick={() =>
-                  handleActionsModal({ action: "edit", id: user.organizationid })
+                  handleActionsModal({
+                    action: "edit",
+                    id: user.organizationid,
+                  })
                 }
                 className="text-lg text-white cursor-pointer active:opacity-50"
               >
-                <FaEdit />
+                <icon.FaEdit />
               </span>
             </Tooltip>
             <Tooltip color="danger" content="Delete user">
               <span
                 onClick={() =>
-                  handleActionsModal({ action: "delete", id: user.organizationid })
+                  handleActionsModal({
+                    action: "delete",
+                    id: user.organizationid,
+                  })
                 }
                 className="text-lg text-danger cursor-pointer active:opacity-50"
               >
-                <MdOutlineDelete />
+                <icon.MdOutlineDelete />
               </span>
             </Tooltip>
           </div>
@@ -149,17 +147,15 @@ const Organisations = () => {
             <p className="font-medium text-4xl">Create Organizations</p>
             <div className="flex items-center justify-end md:justify-center gap-4">
               <button type="button">
-                <SlRefresh className="w-5 h-5 hover:rotate-[180deg] transition-all" />
+                <icon.SlRefresh className="w-5 h-5 hover:rotate-[180deg] transition-all" />
               </button>
               <button
                 type="button"
-                onClick={() =>
-                  handleActionsModal({ action: "add"})
-                }
+                onClick={() => handleActionsModal({ action: "add" })}
                 className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2"
               >
                 Add
-                <CiCirclePlus className="w-4 h-4" />
+                <icon.CiCirclePlus className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -230,7 +226,7 @@ const Organisations = () => {
               <div className="flex items-center justify-center gap-4 w-full flex-col">
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <GoOrganization className="w-6 h-6 text-[#808080]" />
+                    <icon.GoOrganization className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
@@ -244,7 +240,7 @@ const Organisations = () => {
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <MdOutlineMailOutline className="w-6 h-6 text-[#808080]" />
+                    <icon.MdOutlineMailOutline className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
@@ -258,7 +254,7 @@ const Organisations = () => {
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <LuClipboardType className="w-6 h-6 text-[#808080]" />
+                    <icon.LuClipboardType className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
@@ -272,7 +268,7 @@ const Organisations = () => {
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <CiMobile3 className="w-6 h-6 text-[#808080]" />
+                    <icon.CiMobile3 className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"

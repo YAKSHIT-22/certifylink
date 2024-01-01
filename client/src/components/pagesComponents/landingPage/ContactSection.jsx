@@ -29,7 +29,7 @@ const ContactSection = () => {
               </div>
               <form onSubmit={handleSubmit} id="contact" className="flex w-full md:w-[90%] items-start justify-center flex-col font-light py-2 text-[#f4f4f4] gap-2">
                 <div className="flex w-full items-start justify-center flex-col gap-2">
-                  <label class="text-sm">Name</label>
+                  <label className="text-sm">Name</label>
                   <input
                     type="text"
                     name="name"
@@ -41,7 +41,7 @@ const ContactSection = () => {
                   />
                 </div>
                 <div className="flex w-full items-start justify-center flex-col gap-2">
-                  <label class="text-sm">Email</label>
+                  <label className="text-sm">Email</label>
                   <input
                     type="email"
                     name="email"
@@ -53,7 +53,7 @@ const ContactSection = () => {
                   />
                 </div>
                 <div className="flex w-full items-start justify-center flex-col gap-2">
-                  <label class="text-sm">Message</label>
+                  <label className="text-sm">Message</label>
                   <textarea
                     type="text"
                     rows="3"

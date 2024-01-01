@@ -30,14 +30,14 @@ const AboutSection = () => {
                 <h1 className="text-3xl sm:text-5xl xl:text-6xl text-white font-bold">Generate Certificates <br/>In Zero Time.</h1>
               </div>
               <div className="flex w-[85%] lg:w-[75%] items-start justify-center flex-col font-light py-2 text-[#cbcbcb] gap-2">
-                <p class="text-base">
+                <p className="text-base">
                   Welcome to CertifyLink, the premier platform revolutionizing
                   the management, validation, and distribution of certificates.
                   Our cutting-edge technology ensures a secure and efficient
                   process for handling a spectrum of achievements, be it in
                   education, profession, or training.
                 </p>
-                <p class="text-base">
+                <p className="text-base">
                 Whether you're an educational institution, a professional organization, or an individual, our platform provides a seamless solution for maintaining the integrity of certificates while streamlining the validation and distribution process. Join us on the forefront of certificate management and experience the convenience of CertifyLink.
                 </p>
               </div>
