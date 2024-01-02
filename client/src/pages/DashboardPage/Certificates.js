@@ -7,21 +7,21 @@ import icon from "../../components/svgExporter";
 
 
 const columns = [
-  { name: "Certificate ID", uid: "certificateid" },
-  { name: "Student Name", uid: "studentname" },
-  { name: "Student Mobile", uid: "studentmobile" },
-  { name: "Student Roll", uid: "studentroll" },
-  { name: "Events Name", uid: "eventsname" },
+  { name: "Certificate ID", uid: "certificateId" },
+  { name: "Student Name", uid: "studentName" },
+  { name: "Student Mobile", uid: "studentMobile" },
+  { name: "Student Roll", uid: "studentRoll" },
+  { name: "Events Name", uid: "eventsName" },
   { name: "Actions", uid: "actions" },
 ];
 
 const users = [
   {
-    certificateid: "#20462",
-    studentname: "lorem ipsum",
-    studentmobile: "+919416829839",
-    studentroll: "2110991573",
-    eventsname: "2023-12-11",
+    certificateId: "#20462",
+    studentName: "lorem ipsum",
+    studentMobile: "+919416829839",
+    studentRoll: "2110991573",
+    eventsName: "2023-12-11",
   },
 ];
 
@@ -87,31 +87,31 @@ const Certificates = () => {
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
-      case "certificateid":
+      case "certificateId":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "studentname":
+      case "studentName":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "studentmobile":
+      case "studentMobile":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "studentroll":
+      case "studentRoll":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "eventsname":
+      case "eventsName":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
@@ -124,7 +124,7 @@ const Certificates = () => {
             <Tooltip content="Edit user" className="!text-white">
               <span
                 onClick={() =>
-                  handleActionsModal({ action: "edit", id: user.certificateid })
+                  handleActionsModal({ action: "edit", id: user.certificateId })
                 }
                 className="text-lg text-white cursor-pointer active:opacity-50"
               >
@@ -136,7 +136,7 @@ const Certificates = () => {
                 onClick={() =>
                   handleActionsModal({
                     action: "delete",
-                    id: user.certificateid,
+                    id: user.certificateId,
                   })
                 }
                 className="text-lg text-danger cursor-pointer active:opacity-50"
@@ -182,7 +182,7 @@ const Certificates = () => {
             <TableContainer
               aria={"Certificate Table"}
               columns={columns}
-              id={"certificateid"}
+              id={"certificateId"}
               users={users}
               renderCell={renderCell}
             />
@@ -244,8 +244,8 @@ const Certificates = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Certificate Id"
                     onChange={handleInputChange}
-                    value={form.certificateid || ""}
-                    name="certificateid"
+                    value={form.certificateId || ""}
+                    name="certificateId"
                     required
                   />
                 </div>
@@ -258,8 +258,8 @@ const Certificates = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Student Name"
                     onChange={handleInputChange}
-                    value={form.studentname || ""}
-                    name="studentname"
+                    value={form.studentName || ""}
+                    name="studentName"
                     required
                   />
                 </div>
@@ -272,8 +272,8 @@ const Certificates = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Student Mobile"
                     onChange={handleInputChange}
-                    value={form.studentmobile || ""}
-                    name="studentmobile"
+                    value={form.studentMobile || ""}
+                    name="studentMobile"
                     required
                   />
                 </div>
@@ -286,8 +286,8 @@ const Certificates = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Student Roll"
                     onChange={handleInputChange}
-                    value={form.studentroll || ""}
-                    name="studentroll"
+                    value={form.studentRoll || ""}
+                    name="studentRoll"
                     required
                   />
                 </div>
@@ -300,8 +300,8 @@ const Certificates = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Event Name"
                     onChange={handleInputChange}
-                    value={form.eventname || ""}
-                    name="eventname"
+                    value={form.eventName || ""}
+                    name="eventName"
                     required
                   />
                 </div>

@@ -6,8 +6,8 @@ import { Tooltip } from "@nextui-org/react";
 import icon from "../../components/svgExporter";
 
 const columns = [
-  { name: "Organizational ID", uid: "organizationid" },
-  { name: "Organization Name", uid: "organizationname" },
+  { name: "Organizational ID", uid: "organizationId" },
+  { name: "Organization Name", uid: "organizationName" },
   { name: "Email", uid: "email" },
   { name: "Type", uid: "type" },
   { name: "Mobile No.", uid: "mobile" },
@@ -16,8 +16,8 @@ const columns = [
 
 const users = [
   {
-    organizationid: "#20462",
-    organizationname: "lorem ipsum",
+    organizationId: "#20462",
+    organizationName: "lorem ipsum",
     email: "123@gmail.com",
     type: "Student Organisation",
     mobile: "+919416829839",
@@ -73,13 +73,13 @@ const Organisations = () => {
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
-      case "organizationid":
+      case "organizationId":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "organizationname":
+      case "organizationName":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
@@ -112,7 +112,7 @@ const Organisations = () => {
                 onClick={() =>
                   handleActionsModal({
                     action: "edit",
-                    id: user.organizationid,
+                    id: user.organizationId,
                   })
                 }
                 className="text-lg text-white cursor-pointer active:opacity-50"
@@ -125,7 +125,7 @@ const Organisations = () => {
                 onClick={() =>
                   handleActionsModal({
                     action: "delete",
-                    id: user.organizationid,
+                    id: user.organizationId,
                   })
                 }
                 className="text-lg text-danger cursor-pointer active:opacity-50"
@@ -163,7 +163,7 @@ const Organisations = () => {
             <TableContainer
               aria={"Organization Table"}
               columns={columns}
-              id={"organizationid"}
+              id={"organizationId"}
               users={users}
               renderCell={renderCell}
             />
@@ -233,8 +233,8 @@ const Organisations = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Organization Name"
                     onChange={handleInputChange}
-                    value={form.organizationname || ""}
-                    name="organizationname"
+                    value={form.organizationName || ""}
+                    name="organizationName"
                     required
                   />
                 </div>

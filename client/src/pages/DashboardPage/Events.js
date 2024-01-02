@@ -7,21 +7,21 @@ import icon from "../../components/svgExporter";
 
 
 const columns = [
-  { name: "Event ID", uid: "eventid" },
-  { name: "Events Name", uid: "eventname" },
+  { name: "Event ID", uid: "eventId" },
+  { name: "Events Name", uid: "eventName" },
   { name: "Address", uid: "address" },
   { name: "Type", uid: "type" },
-  { name: "Start Date", uid: "startdate" },
+  { name: "Start Date", uid: "startDate" },
   { name: "Actions", uid: "actions" },
 ];
 
 const users = [
   {
-    eventid: "#20462",
-    eventname: "lorem ipsum",
+    eventId: "#20462",
+    eventName: "lorem ipsum",
     address: "Online",
     type: "Workshop",
-    startdate: "2023-12-11",
+    startDate: "2023-12-11",
   },
 ];
 
@@ -68,13 +68,13 @@ const Events = () => {
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
-      case "eventid":
+      case "eventId":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "eventname":
+      case "eventName":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
@@ -92,7 +92,7 @@ const Events = () => {
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "startdate":
+      case "startDate":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
@@ -104,7 +104,7 @@ const Events = () => {
             <Tooltip content="Edit user" className="!text-white">
               <span
                 onClick={() =>
-                  handleActionsModal({ action: "edit", id: user.eventid })
+                  handleActionsModal({ action: "edit", id: user.eventId })
                 }
                 className="text-lg !text-white cursor-pointer active:opacity-50"
               >
@@ -114,7 +114,7 @@ const Events = () => {
             <Tooltip color="danger" content="Delete user">
               <span
                 onClick={() =>
-                  handleActionsModal({ action: "delete", id: user.eventid })
+                  handleActionsModal({ action: "delete", id: user.eventId })
                 }
                 className="text-lg text-danger cursor-pointer active:opacity-50"
               >
@@ -151,7 +151,7 @@ const Events = () => {
             <TableContainer
               aria={"Events Table"}
               columns={columns}
-              id={"eventid"}
+              id={"eventId"}
               users={users}
               renderCell={renderCell}
             />
@@ -221,8 +221,8 @@ const Events = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Event Name"
                     onChange={handleInputChange}
-                    value={form.eventname || ""}
-                    name="eventname"
+                    value={form.eventName || ""}
+                    name="eventName"
                     required
                   />
                 </div>
@@ -263,8 +263,8 @@ const Events = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Start Date"
                     onChange={handleInputChange}
-                    value={form.startdate || ""}
-                    name="startdate"
+                    value={form.startDate || ""}
+                    name="startDate"
                     required
                   />
                 </div>
@@ -277,8 +277,8 @@ const Events = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="End Date"
                     onChange={handleInputChange}
-                    value={form.enddate || ""}
-                    name="enddate"
+                    value={form.endDate || ""}
+                    name="endDate"
                     required
                   />
                 </div>
