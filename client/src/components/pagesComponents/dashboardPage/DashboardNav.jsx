@@ -1,6 +1,6 @@
 import React from "react";
-import {useLocation,useNavigate} from 'react-router-dom'
-const DashboardNav = () => {
+import { useLocation, useNavigate } from 'react-router-dom'
+const DashboardNav = ({img}) => {
   const location = useLocation();
   const navigate = useNavigate();
   return (
@@ -10,9 +10,9 @@ const DashboardNav = () => {
           <div className="flex text-white">
             <p className="font-bold uppercase">{location.pathname.split("/")[2]}</p>
           </div>
-          <button className="flex" onClick={()=>navigate("/dashboard/profile")}>
+          <button className="flex" onClick={() => navigate("/dashboard/profile")}>
             <img
-              src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fG1vZGVsfGVufDB8fDB8fHww"
+              src={img}
               alt="avatar"
               className="flex w-8 h-8 object-cover rounded-full"
             />

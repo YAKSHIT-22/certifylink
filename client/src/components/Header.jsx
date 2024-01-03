@@ -2,8 +2,10 @@ import React from "react";
 import logo from "../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import HeaderLinks from "./minorComponents/HeaderLinks";
+import { useAuthStore } from "../store/masterStore";
 const Header = () => {
   const navigate = useNavigate();
+  const user = useAuthStore(state => state.user)
   return (
     <header className="w-full flex items-center justify-center p-2 fixed top-0 z-10">
       <nav className="w-full flex items-center justify-center max-w-screen-2xl mx-auto sm:px-4">
@@ -19,12 +21,22 @@ const Header = () => {
             <HeaderLinks link={"/"} text={"Home"} />
             <HeaderLinks link={"/#about"} text={"About"} />
             <HeaderLinks link={"/#contact"} text={"Contact"} />
-            <button
-              onClick={() => navigate("/login")}
-              className="px-6 sm:px-8 py-2 rounded-full bg-white hover:bg-transparent hover:border: border-white border border-transparent text-[#181818] hover:text-white transition-all"
-            >
-              <p className=" text-sm sm:text-base font-light">Login/Register</p>
-            </button>
+            {user
+              ? <button className="flex" onClick={() => navigate("/dashboard/home")}>
+                <img
+                  src={user?.img}
+                  alt="avatar"
+                  className="flex w-8 h-8 object-cover rounded-full"
+                />
+              </button>
+              :
+              <button
+                onClick={() => navigate("/login")}
+                className="px-6 sm:px-8 py-2 rounded-full bg-white hover:bg-transparent hover:border: border-white border border-transparent text-[#181818] hover:text-white transition-all"
+              >
+                <p className=" text-sm sm:text-base font-light">Login/Register</p>
+              </button>
+            }
           </div>
         </div>
       </nav>

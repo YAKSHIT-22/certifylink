@@ -1,30 +1,35 @@
-import React, { useState } from "react";
-import {FcGoogle} from 'react-icons/fc'
+import React, { useEffect, useState } from "react";
+import { FcGoogle } from 'react-icons/fc'
 import login from '../../assets/login.svg'
+import { publicApi } from "../../utils/app.utils";
+import toast from "react-hot-toast";
+import { useAuthStore } from "../../store/masterStore";
+import { useNavigate } from "react-router";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const [form, setFormValues] = useState({
-  });
-  const [error, setError] = useState("");
-
+  const [error, setError] = useState(null);
+  const navigate = useNavigate()
+  let { user, setUser } = useAuthStore(state => state);
+  useEffect(() => {
+    if (user) {
+      return navigate("/dashboard/home")
+    }
+  }, [user, navigate])
   const onSubmit = async (e) => {
     e.preventDefault();
-    try {
-      setLoading(true)
-
-      setLoading(false);
-      setFormValues({ email: "", password: "" });
-      
-    } catch (error) {
-      setLoading(false);
-      setError(error);
-    }
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormValues({ ...form, [name]: value });
+    setLoading(true);
+    publicApi.post("/api/v1/user/login", {
+      email: e.target.email.value,
+      password: e.target.password.value,
+    }).then((res) => {
+      setUser(res.data.user);
+      toast.success("Welcome Back, 👋🏻");
+      e.target.reset();
+      return navigate("/dashboard/home");
+    })
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false))
   };
   return (
     <section className="w-screen min-h-screen md:h-screen  flex items-center justify-center">
@@ -61,8 +66,6 @@ const Login = () => {
                         required
                         type="email"
                         name="email"
-                        value={form.email || ""}
-                        onChange={handleChange}
                         className="py-4 px-4 rounded-md border border-[#252525] bg-transparent text-[#cbcbcb] w-full focus:outline-none focus:ring-1 focus:ring-[#FFC947] focus:border-transparent"
                       />
                     </div>
@@ -74,15 +77,13 @@ const Login = () => {
                         type="password"
                         required
                         name="password"
-                        value={form.password || ""} 
-                        onChange={handleChange}
                         placeholder="Enter your password"
                         className="py-4 px-4 rounded-md border border-[#252525] bg-transparent text-[#cbcbcb] w-full focus:outline-none focus:ring-1 focus:ring-[#FFC947] focus:border-transparent"
                       />
                     </div>
                   </div>
                   <div className="w-full h-full flex items-center justify-start">
-                    <button className="bg-[#FFC947] text-white font-semibold px-12 rounded-md py-4 border-2 border-transparent hover:border-2 hover:border-[#FFC947] hover:text-[#FFC947] hover:bg-transparent transition-all duration-500 w-full flex items-center justify-center text-base">
+                    <button disabled={loading} type="submit" className="bg-[#FFC947] text-white font-semibold px-12 rounded-md py-4 border-2 border-transparent hover:border-2 hover:border-[#FFC947] hover:text-[#FFC947] hover:bg-transparent transition-all duration-500 w-full flex items-center justify-center text-base">
                       Sign in
                     </button>
                   </div>
@@ -95,8 +96,7 @@ const Login = () => {
                 <div className="w-full h-full flex items-center justify-center">
                   <button
                     type="submit"
-                    onClick={() =>
-                      {}
+                    onClick={() => { }
                     }
                     className="bg-[#F3F9FA] text-[#313957] px-12 whitespace-nowrap rounded-md py-4 w-full flex items-center justify-center gap-2 text-base"
                   >

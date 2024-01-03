@@ -1,23 +1,28 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const User = require("./userSchema")
 
-const organizationSchema = new mongoose.Schema({   
-   organizationName: {
-        type: String,
-        required: true
-   },
-   email:{
-        type: String,
-        required: true
-   },
-   type:{
-        type: String,
-        required: true
-   },
-   mobile:{
-        type: String,
-        required: true
-   }
+const organizationSchema = new mongoose.Schema({
+     organizationName: {
+          type: String,
+          required: true
+     },
+     email: {
+          type: String,
+          required: true
+     },
+     type: {
+          type: String,
+          required: true
+     },
+     mobile: {
+          type: String,
+          required: true
+     },
+     createdBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "user",
+          required: true
+     }
 })
-
-const organizationData = mongoose.model('organizationData', organizationSchema);
-module.exports = organizationData
+const Organizations = mongoose.models["organization"] || mongoose.model("organization", organizationSchema);
+module.exports = Organizations

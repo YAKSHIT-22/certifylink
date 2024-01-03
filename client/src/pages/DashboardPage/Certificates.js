@@ -121,7 +121,7 @@ const Certificates = () => {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Edit user" className="!text-white">
+            <Tooltip content="Edit Certificate" className="!text-white">
               <span
                 onClick={() =>
                   handleActionsModal({ action: "edit", id: user.certificateId })
@@ -131,7 +131,7 @@ const Certificates = () => {
                 <icon.FaEdit />
               </span>
             </Tooltip>
-            <Tooltip color="danger" content="Delete user">
+            <Tooltip color="danger" content="Delete Certificate">
               <span
                 onClick={() =>
                   handleActionsModal({
@@ -183,7 +183,7 @@ const Certificates = () => {
               aria={"Certificate Table"}
               columns={columns}
               id={"certificateId"}
-              users={users}
+              data={users}
               renderCell={renderCell}
             />
           </div>

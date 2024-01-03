@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DashboardHeader from "../pagesComponents/dashboardPage/DashboardHeader";
 import DashboardNav from "../pagesComponents/dashboardPage/DashboardNav";
+import { useAuthStore } from "../../store/masterStore";
+import { useNavigate } from "react-router";
 
 const DashboardContainer = ({ children }) => {
+  const user = useAuthStore(state => state.user)
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) {
+      return navigate("/login");
+    }
+  }, [user, navigate])
   return (
     <main className="flex items-start justify-start w-full min-h-[100dvh] h-full">
       <div className="flex items-center justify-center w-full max-w-screen-2xl mx-auto min-h-[100dvh] md:py-0 pb-[8rem]">
@@ -11,7 +20,7 @@ const DashboardContainer = ({ children }) => {
             <DashboardHeader />
           </div>
           <div className="flex items-start justify-start w-full min-h-[100dvh] md:w-[85%] lg:w-[75%] xl:w-[85%] flex-col">
-            <DashboardNav />
+            <DashboardNav img={user?.img} />
             <div className="flex items-center justify-center w-full h-full p-4">
               {children}
             </div>

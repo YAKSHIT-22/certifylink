@@ -107,7 +107,7 @@ const Organisations = () => {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Edit user" className="!text-white">
+            <Tooltip content="Edit Organisation" className="!text-white">
               <span
                 onClick={() =>
                   handleActionsModal({
@@ -120,7 +120,7 @@ const Organisations = () => {
                 <icon.FaEdit />
               </span>
             </Tooltip>
-            <Tooltip color="danger" content="Delete user">
+            <Tooltip color="danger" content="Delete Organisation">
               <span
                 onClick={() =>
                   handleActionsModal({
@@ -164,7 +164,7 @@ const Organisations = () => {
               aria={"Organization Table"}
               columns={columns}
               id={"organizationId"}
-              users={users}
+              data={users}
               renderCell={renderCell}
             />
           </div>
@@ -232,8 +232,6 @@ const Organisations = () => {
                     type="text"
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Organization Name"
-                    onChange={handleInputChange}
-                    value={form.organizationName || ""}
                     name="organizationName"
                     required
                   />
@@ -246,8 +244,6 @@ const Organisations = () => {
                     type="text"
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Email"
-                    onChange={handleInputChange}
-                    value={form.email || ""}
                     name="email"
                     required
                   />
@@ -260,8 +256,6 @@ const Organisations = () => {
                     type="text"
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Organisation Type"
-                    onChange={handleInputChange}
-                    value={form.type || ""}
                     name="type"
                     required
                   />
@@ -274,8 +268,6 @@ const Organisations = () => {
                     type="text"
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Mobile No."
-                    onChange={handleInputChange}
-                    value={form.mobile || ""}
                     name="mobile"
                     required
                   />

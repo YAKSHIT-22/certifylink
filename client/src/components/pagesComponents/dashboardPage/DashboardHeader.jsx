@@ -7,8 +7,12 @@ import { GoProjectTemplate } from "react-icons/go";
 import { GrCertificate } from "react-icons/gr";
 import { IoMdLogOut } from "react-icons/io";
 import DashboardLinks from "../../minorComponents/DashboardLinks";
+import { useAuthStore } from "../../../store/masterStore";
+import toast from "react-hot-toast";
 
 const DashboardHeader = () => {
+  const { clearUser } = useAuthStore(state => state)
+
   return (
     <header className="md:static fixed bottom-0 flex items-start justify-start w-full md:min-h-[100dvh] md:h-full bg-[#191919] z-10 border-r border-[#252525]">
       <nav className="flex items-center justify-center w-full h-full md:min-h-[100dvh]">
@@ -45,7 +49,10 @@ const DashboardHeader = () => {
               />
             </div>
             <div className="flex items-center justify-center w-full">
-              <button className="text-lg font-semibold flex items-center justify-center gap-2 text-red-600">
+              <button onClick={() => {
+                clearUser()
+                toast.success("Logged out!")
+              }} className="text-lg font-semibold flex items-center justify-center gap-2 text-red-600">
                 <span className="lg:flex hidden">Logout</span>
                 <IoMdLogOut className="-rotate-90 w-6 h-6" />
               </button>

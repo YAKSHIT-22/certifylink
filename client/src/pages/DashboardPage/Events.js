@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DashboardContainer from "../../components/containers/DashboardContainer";
 import TableContainer from "../../components/containers/TableContainer";
 import ModalContainer from "../../components/containers/ModalContainer";
 import { Tooltip } from "@nextui-org/react";
 import icon from "../../components/svgExporter";
+import { publicApi } from "../../utils/app.utils";
+import toast from "react-hot-toast";
+import { useEventsStore } from "../../store/masterStore";
 
 
 const columns = [
@@ -15,19 +18,10 @@ const columns = [
   { name: "Actions", uid: "actions" },
 ];
 
-const users = [
-  {
-    eventId: "#20462",
-    eventName: "lorem ipsum",
-    address: "Online",
-    type: "Workshop",
-    startDate: "2023-12-11",
-  },
-];
-
 const Events = () => {
   const [isActionModalOpen, setActionModal] = useState({});
-  const [form, setForm] = useState({});
+  const [loading, setLoading] = useState(false)
+  const { events, setEvents } = useEventsStore(state => state)
   const handleActionsModal = ({ action, id = 0 }) => {
     setActionModal({
       ...isActionModalOpen,
@@ -35,14 +29,14 @@ const Events = () => {
       isOpen: true,
     });
     if (action === "edit") {
-      setForm({
-        ...form,
-        eventId: id,
-      });
+      // setForm({
+      //   ...form,
+      //   eventId: id,
+      // });
     } else if (action === "delete") {
-      setForm({
-        eventId: id,
-      });
+      // setForm({
+      //   eventId: id,
+      // });
     }
   };
   const handleActionsModalClose = () => {
@@ -51,20 +45,51 @@ const Events = () => {
       isOpen: false,
       action: "",
     });
-    setForm({});
+    // setForm({});
   };
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    setLoading(true)
+    publicApi.get("/api/v1/event")
+      .then((res) => {
+        setEvents(res.data.data)
+        setLoading(false)
+      })
+      .catch((error) => console.log(error.message))
+  }, [])
+  const data = useMemo(() => {
+    return events.map(e => {
+      return {
+        ...e,
+        eventId: e._id,
+      }
+    })
+  }, [events])
+  const handleSubmit = async (e) => {
     if (isActionModalOpen.action === "edit") {
       e.preventDefault();
       console.log("edit");
-    } else if (isActionModalOpen.action === "add") {
+    }
+    else if (isActionModalOpen.action === "add") {
       e.preventDefault();
-      console.log("add");
+      setLoading(true)
+      await publicApi.post("/api/v1/event", {
+        eventName: e.target.eventName.value,
+        address: e.target.address.value,
+        type: e.target.type.value,
+        startDate: e.target.startDate.value,
+        endDate: e.target.endDate.value,
+      })
+        .then((res) => {
+          toast.success(res.data.message)
+          setEvents(res.data.data)
+          e.target.reset();
+        })
+        .catch((error) => toast.error(error.message))
+        .finally(() => setLoading(false))
     } else if (isActionModalOpen.action === "delete") {
       console.log("delete");
     }
   };
-  const handleInputChange = () => {};
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
@@ -101,7 +126,7 @@ const Events = () => {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Edit user" className="!text-white">
+            <Tooltip content="Edit Event" className="!text-white">
               <span
                 onClick={() =>
                   handleActionsModal({ action: "edit", id: user.eventId })
@@ -111,7 +136,7 @@ const Events = () => {
                 <icon.FaEdit />
               </span>
             </Tooltip>
-            <Tooltip color="danger" content="Delete user">
+            <Tooltip color="danger" content="Delete Event">
               <span
                 onClick={() =>
                   handleActionsModal({ action: "delete", id: user.eventId })
@@ -152,7 +177,7 @@ const Events = () => {
               aria={"Events Table"}
               columns={columns}
               id={"eventId"}
-              users={users}
+              data={data}
               renderCell={renderCell}
             />
           </div>
@@ -163,24 +188,24 @@ const Events = () => {
           isActionModalOpen.action === "edit"
             ? "Edit Events"
             : isActionModalOpen.action === "add"
-            ? "Add Events"
-            : "Delete Events"
+              ? "Add Events"
+              : "Delete Events"
         }
         isOpen={isActionModalOpen.isOpen}
         onClose={handleActionsModalClose}
         cta={
           isActionModalOpen.action === "edit"
-            ? "Edit Events"
+            ? "Edit Event"
             : isActionModalOpen.action === "add"
-            ? "Add Events"
-            : "Delete Events"
+              ? "Add Event"
+              : "Delete Event"
         }
         formid={
           isActionModalOpen.action === "edit"
             ? "editevents"
             : isActionModalOpen.action === "add"
-            ? "addevents"
-            : "deleteevents"
+              ? "addevents"
+              : "deleteevents"
         }
         onSubmit={handleSubmit}
         ctaClass={isActionModalOpen.action === "delete" ? "danger" : "primary"}
@@ -191,7 +216,7 @@ const Events = () => {
         {isActionModalOpen.action === "delete" ? (
           <div className="w-full flex items-center justify-center">
             <p className="p-2 text-center flex items-center justify-center font-bold">
-              Are you sure you want to delete this room
+              Are you sure you want to delete this event?
             </p>
           </div>
         ) : (
@@ -220,8 +245,6 @@ const Events = () => {
                     type="text"
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Event Name"
-                    onChange={handleInputChange}
-                    value={form.eventName || ""}
                     name="eventName"
                     required
                   />
@@ -234,8 +257,6 @@ const Events = () => {
                     type="text"
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Address"
-                    onChange={handleInputChange}
-                    value={form.address || ""}
                     name="address"
                     required
                   />
@@ -248,8 +269,6 @@ const Events = () => {
                     type="text"
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Event Type"
-                    onChange={handleInputChange}
-                    value={form.type || ""}
                     name="type"
                     required
                   />
@@ -259,11 +278,9 @@ const Events = () => {
                     <icon.BsCalendar2Date className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
-                    type="text"
+                    type="date"
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Start Date"
-                    onChange={handleInputChange}
-                    value={form.startDate || ""}
                     name="startDate"
                     required
                   />
@@ -273,11 +290,9 @@ const Events = () => {
                     <icon.BsCalendarDateFill className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
-                    type="text"
-                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
+                    type="date"
+                    className="flex bg-transparent text-sm w-full pl-10 fill-white pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="End Date"
-                    onChange={handleInputChange}
-                    value={form.endDate || ""}
                     name="endDate"
                     required
                   />

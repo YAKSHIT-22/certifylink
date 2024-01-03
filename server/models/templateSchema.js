@@ -1,26 +1,21 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const Organization = require('./organizationSchema');
 
-const templateSchema = new mongoose.Schema({   
-    organizationId:{
-        type: String,
-        required: true,
-    },
-    organizationName:{
-        type: String,
-        required: true,
+const templateSchema = new mongoose.Schema({
+    organization: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "organization",
+        required: true
     },
     templateName: {
         type: String,
         required: true
     },
-    eventId:{
-        type: String,
-        required: true
-    },
-    eventName:{
-        type: String,
+    event: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "event",
         required: true
     }
 })
-const templateData = mongoose.model("templateData", templateSchema);
-module.exports = templateData
+const Templates = mongoose.models["template"] || mongoose.model("template", templateSchema);
+module.exports = Templates

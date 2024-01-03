@@ -1,30 +1,43 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-    name:{
-        type:String,
-        default: null,
-        trim:true,
+const userSchema = mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
     },
-    email:{
-        type:String,
-        unique:true,
-        required:true,
-        trim:true,
+    age: {
+        type: Number,
+        default: 0,
     },
-    password:{
-        type:String,
-        required:true,
+    email: {
+        type: String,
+        required: true,
     },
-    confirmPassword:{
-        type:String,
+    phone: {
+        type: String,
+        required: true,
     },
-    token:{
-        type:String,
+    gender: {
+        type: String,
+        enum: ['Male', "Female", "Other"],
+        required: true,
     },
-}, {
-    timestamps: true, 
-  })
-
-const user = mongoose.model('user',userSchema);
-module.exports = user; 
+    password: {
+        type: String,
+        required: true
+    },
+    bio: {
+        type: String,
+        required: true,
+    },
+    img: {
+        type: String,
+        default: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+    }
+},
+    {
+        timestamps: true,
+    }
+);
+const Users = mongoose.models["user"] || mongoose.model("user", userSchema);
+module.exports = Users 
