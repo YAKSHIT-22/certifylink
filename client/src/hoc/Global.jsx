@@ -7,9 +7,9 @@ const Global = ({children}) => {
   const location = useLocation();
   return (
     <>
-    {location.pathname === '/' ? <Header/> : ["/"].some(path => path === location.pathname || /^\/dashboard\//.test(location.pathname)) ? null : location.pathname === "/login" ? null : <Header/>}
+    {location.pathname === '/' ? <Header/> : ["/"].some(path => path === location.pathname || /^\/dashboard\//.test(location.pathname)) ? null : ["/login","/signup"].includes(location.pathname) ? null : <Header/>}
     {children}
-    {["/login"].some(path => path === location.pathname || /^\/dashboard\//.test(location.pathname)) ? null : <Footer />}
+    {["/login","/signup"].some(path => path === location.pathname || /^\/dashboard\//.test(location.pathname)) ? null : <Footer />}
     </>
   )
 }

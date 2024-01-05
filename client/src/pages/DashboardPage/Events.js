@@ -232,7 +232,13 @@ const Events = () => {
               </p>
             </div>
             <form
-              id="editevents"
+              id={
+                isActionModalOpen.action === "edit"
+                  ? "editevents"
+                  : isActionModalOpen.action === "add"
+                    ? "addevents"
+                    : "deleteevents"
+              }
               onSubmit={handleSubmit}
               className="flex items-center justify-center gap-4 flex-col"
             >
