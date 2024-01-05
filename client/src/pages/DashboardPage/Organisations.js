@@ -219,7 +219,13 @@ const Organisations = () => {
               </p>
             </div>
             <form
-              id="editorganization"
+              id={
+                isActionModalOpen.action === "edit"
+                  ? "editorganization"
+                  : isActionModalOpen.action === "add"
+                  ? "addorganization"
+                  : "deleteorganization"
+              }
               onSubmit={handleSubmit}
               className="flex items-center justify-center gap-4 flex-col"
             >
