@@ -5,7 +5,7 @@ const connectDatabase = require('./config/database');
 
 //used for excel upload of data
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage }).single('excelFile');
+const upload = multer({ storage: storage }).single('excelData');
 
 const app = express();
 const port = 4000;
@@ -27,7 +27,7 @@ app.use("/api/v1/user", require("./routes/auth"));
 app.use("/api/v1/org", require("./routes/organization"));
 app.use("/api/v1/template", require("./routes/template"));
 app.use("/api/v1/event", require("./routes/event"));
-app.use("/api/v1/certificate", require("./routes/certificate"));
+app.use("/api/v1/certificate", upload, require("./routes/certificate"));
 
 app.get('/', (req, res) => {
     res.json({ message: 'Hello World!' });

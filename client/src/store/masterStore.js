@@ -49,9 +49,12 @@ export const useTemplateStore = create((set) => ({
 }))
 
 export const useCsvStore = create((set) => ({
-    csv: ({}),
-    setCsv: (csv) => set((c) => ({
-        csv: { ...c.csv, ...csv }
+    csv: [],
+    setCsv: (data) => set({
+        csv: data
+    }),
+    addCsv: (csv) => set((state) => ({
+        csv: [...state.csv, csv]
     })),
 }))
 

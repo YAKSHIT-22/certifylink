@@ -119,6 +119,14 @@ const Events = () => {
         .finally(() => setLoading(false))
     }
   };
+
+  const handleInputChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
@@ -282,7 +290,7 @@ const Events = () => {
                     placeholder="Event Name"
                     name="eventName"
                     required
-                    onChange={(e) => setForm({ ...form, eventName: e.target.value })}
+                    onChange={handleInputChange}
                     value={form.eventName || ""}
                   />
                 </div>
@@ -296,9 +304,7 @@ const Events = () => {
                     placeholder="Address"
                     name="address"
                     required
-                    onChange={(e) => {
-                      setForm({ ...form, address: e.target.value });
-                    }}
+                    onChange={handleInputChange}
                     value={form.address || ""}
                   />
                 </div>
@@ -312,7 +318,7 @@ const Events = () => {
                     placeholder="Event Type"
                     name="type"
                     required
-                    onChange={(e) => setForm({ ...form, type: e.target.value })}
+                    onChange={handleInputChange}
                     value={form.type || ""}
                   />
                 </div>
@@ -326,7 +332,7 @@ const Events = () => {
                     placeholder="Start Date"
                     name="startDate"
                     required
-                    onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+                    onChange={handleInputChange}
                     value={form.startDate || ""}
                   />
                 </div>
@@ -340,7 +346,7 @@ const Events = () => {
                     placeholder="End Date"
                     name="endDate"
                     required
-                    onChange={(e) => setForm({ ...form, endDate: e.target.value })}
+                    onChange={handleInputChange}
                     value={form.endDate || ""}
                   />
                 </div>

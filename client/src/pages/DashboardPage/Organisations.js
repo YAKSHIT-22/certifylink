@@ -120,6 +120,14 @@ const Organisations = () => {
     }
   };
 
+
+  const handleInputChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
@@ -289,7 +297,7 @@ const Organisations = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Organization Name"
                     name="organizationName"
-                    onChange={(e) => setForm({ ...form, organizationName: e.target.value })}
+                    onChange={handleInputChange}
                     value={form.organizationName || ""}
                     required
                   />
@@ -303,7 +311,7 @@ const Organisations = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Email"
                     name="email"
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    onChange={handleInputChange}
                     value={form.email || ""}
                     required
                   />
@@ -318,7 +326,7 @@ const Organisations = () => {
                     placeholder="Organisation Type"
                     name="type"
                     required
-                    onChange={(e) => setForm({ ...form, type: e.target.value })}
+                    onChange={handleInputChange}
                     value={form.type || ""}
                   />
                 </div>
@@ -332,7 +340,7 @@ const Organisations = () => {
                     placeholder="Mobile No."
                     name="mobile"
                     required
-                    onChange={(e) => setForm({ ...form, mobile: e.target.value })}
+                    onChange={handleInputChange}
                     value={form.mobile || ""}
                   />
                 </div>

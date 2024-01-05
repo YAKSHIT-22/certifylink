@@ -33,7 +33,7 @@ const xlsx = require('xlsx');
 const excelSchema = require('../models/excelSchema');
 const createCertificate = async (req, res) => {
     if (!req.file) {
-        return res.status(400).send('No file uploaded.');
+        return res.status(400).json({ message: 'No file uploaded.' });
     }
     const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
     const sheetName = workbook.SheetNames[0];
@@ -46,15 +46,15 @@ const createCertificate = async (req, res) => {
                 createdBy: req.user
             }
             const existingdata = await excelSchema.find({
-                RollNo: newData.RollNo,
+                rollNo: newData.rollNo,
                 createdBy: req.user
             })
-            if (existingdata && existingdata.length > 0) {
-                return;
+            if (!existingdata && !existingdata.length > 0) {
+                const newExcelData = new excelSchema(newData);
+                await newExcelData.save();
             }
-            const newExcelData = new excelSchema(newData);
-            await newExcelData.save();
         })
+        return res.status(200).json({ message: 'Data saved successfully.' });
     } catch (error) {
         res.status(500).json({ message: 'Error saving data to Database.' });
     }
@@ -63,8 +63,10 @@ const createCertificate = async (req, res) => {
 
 const getCertificates = async (req, res) => {
     try {
-        const data = await excelSchema.find();
-        res.status(200).json(data);
+        const data = await excelSchema.find({
+            createdBy: req.user
+        });
+        return res.status(200).json({ data });
     } catch (error) {
         res.status(500).json({ message: 'Error getting data from Database.' });
     }

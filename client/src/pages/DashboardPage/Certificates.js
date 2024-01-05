@@ -4,6 +4,9 @@ import TableContainer from "../../components/containers/TableContainer";
 import ModalContainer from "../../components/containers/ModalContainer";
 import { Tooltip } from "@nextui-org/react";
 import icon from "../../components/svgExporter";
+import { publicApi } from "../../utils/app.utils";
+import toast from "react-hot-toast";
+import { useCsvStore } from "../../store/masterStore";
 
 
 const columns = [
@@ -28,22 +31,32 @@ const users = [
 const Certificates = () => {
   const [isActionModalOpen, setActionModal] = useState({});
   const [form, setForm] = useState({});
-  const [csv, setCsvUpload] = useState({});
+  const [csvUpload, setCsvUpload] = useState({});
   const [reload, setReload] = useState(false)
-  const handleFileChange = (e) => {
-    setCsvUpload({
-      file: e.target.files[0],
-      uploaded: true,
-    });
-  };
-
+  const [loading, setLoading] = useState(false)
+  const { csv, setCsv, addCsv } = useCsvStore();
   useEffect(() => {
-    if (csv.uploaded) {
-      console.log("Upload initiated");
-
-      // setCsvUpload({  })
-    }
-  }, [csv.uploaded]);
+    setLoading(true)
+    publicApi.get("/api/v1/certificate")
+      .then((res) => {
+        console.log(res.data.data)
+        setCsv(res.data.data)
+        setLoading(false)
+      })
+      .catch((error) => toast.error(error.message))
+  }, [reload])
+  const data = React.useMemo(() => {
+    return csv.map(e => {
+      return {
+        ...e,
+        certificateId: e._id,
+        studentName: e.Name,
+        studentMobile: e.Mobile,
+        studentRoll: e.rollNo,
+        eventsName: e.eventName,
+      }
+    })
+  }, [csv])
 
   const handleSubmit = (e) => {
     if (isActionModalOpen.action === "edit") {
@@ -84,6 +97,27 @@ const Certificates = () => {
     });
     setForm({});
   };
+
+  const handleCsvUpload = async () => {
+    setLoading(true)
+    const formData = new FormData();
+    formData.append('excelData', csvUpload.file);
+    await publicApi.post("/api/v1/certificate", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then((res) => {
+        toast.success(res.data.message)
+        setCsvUpload({})
+        setReload(!reload)
+      })
+      .catch((error) => {
+        toast.error(error.message)
+      })
+      .finally(() => setLoading(false))
+  }
+
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
@@ -164,7 +198,7 @@ const Certificates = () => {
                 htmlFor="upload"
                 className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2"
               >
-                {csv.uploaded ? "File Upload Done" : "Upload"}
+                {csvUpload.uploaded ? "File Upload Done" : "Upload"}
                 <icon.MdUpload className="w-4 h-4" />
                 <input
                   hidden
@@ -173,8 +207,16 @@ const Certificates = () => {
                   accept=".xlsx,.csv"
                   id="upload"
                   name="upload"
-                  onChange={handleFileChange}
+                  onChange={(e) => {
+                    setCsvUpload({
+                      file: e.target.files[0],
+                      uploaded: true,
+                    });
+                  }}
                 />
+                {
+                  csvUpload.uploaded && <button disabled={loading} onClick={handleCsvUpload} className="text-xs text-white bg-[#ff0000] px-2 py-1 rounded-md">Upload</button>
+                }
               </label>
             </div>
           </div>
@@ -183,7 +225,7 @@ const Certificates = () => {
               aria={"Certificate Table"}
               columns={columns}
               id={"certificateId"}
-              data={users}
+              data={data}
               renderCell={renderCell}
             />
           </div>
