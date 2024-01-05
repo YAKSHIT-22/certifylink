@@ -23,6 +23,7 @@ const Events = () => {
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const { events, setEvents } = useEventsStore(state => state)
+  const [form, setForm] = useState({})
   const handleActionsModal = ({ action, id = 0 }) => {
     setActionModal({
       ...isActionModalOpen,
@@ -30,14 +31,15 @@ const Events = () => {
       isOpen: true,
     });
     if (action === "edit") {
-      // setForm({
-      //   ...form,
-      //   eventId: id,
-      // });
+      const event = events.find((e) => e._id === id);
+      setForm({
+        ...event,
+      });
     } else if (action === "delete") {
-      // setForm({
-      //   eventId: id,
-      // });
+      const event = events.find((e) => e._id === id);
+      setForm({
+        ...event,
+      });
     }
   };
   const handleActionsModalClose = () => {
@@ -67,27 +69,54 @@ const Events = () => {
   const handleSubmit = async (e) => {
     if (isActionModalOpen.action === "edit") {
       e.preventDefault();
-      console.log("edit");
+      setLoading(true)
+      await publicApi.put(`/api/v1/events/${form._id}`, form)
+        .then((res) => {
+          toast.success(res.data.message)
+          e.target.reset();
+          setReload(!reload)
+          setActionModal({
+            ...isActionModalOpen,
+            isOpen: false,
+            action: "",
+          });
+          setForm({});
+        })
+        .catch((error) => toast.error(error.data.message))
+        .finally(() => setLoading(false))
     }
     else if (isActionModalOpen.action === "add") {
       e.preventDefault();
       setLoading(true)
-      await publicApi.post("/api/v1/event", {
-        eventName: e.target.eventName.value,
-        address: e.target.address.value,
-        type: e.target.type.value,
-        startDate: e.target.startDate.value,
-        endDate: e.target.endDate.value,
-      })
+      await publicApi.post("/api/v1/event", form)
         .then((res) => {
           toast.success(res.data.message)
           setEvents(res.data.data)
           e.target.reset();
+          setActionModal({
+            ...isActionModalOpen,
+            isOpen: false,
+            action: "",
+          });
+          setForm({})
         })
-        .catch((error) => toast.error(error.message))
+        .catch((error) => toast.error(error.data.message))
         .finally(() => setLoading(false))
     } else if (isActionModalOpen.action === "delete") {
-      console.log("delete");
+      setLoading(true)
+      await publicApi.delete(`/api/v1/org/${form.oranizationId}`)
+        .then((res) => {
+          toast.success(res.data.message)
+          setReload(!reload)
+          setActionModal({
+            ...isActionModalOpen,
+            isOpen: false,
+            action: "",
+          });
+          setForm({})
+        })
+        .catch((error) => toast.error(error.data.message))
+        .finally(() => setLoading(false))
     }
   };
   const renderCell = React.useCallback((user, columnKey) => {
@@ -253,6 +282,8 @@ const Events = () => {
                     placeholder="Event Name"
                     name="eventName"
                     required
+                    onChange={(e) => setForm({ ...form, eventName: e.target.value })}
+                    value={form.eventName || ""}
                   />
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
@@ -265,6 +296,10 @@ const Events = () => {
                     placeholder="Address"
                     name="address"
                     required
+                    onChange={(e) => {
+                      setForm({ ...form, address: e.target.value });
+                    }}
+                    value={form.address || ""}
                   />
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
@@ -277,6 +312,8 @@ const Events = () => {
                     placeholder="Event Type"
                     name="type"
                     required
+                    onChange={(e) => setForm({ ...form, type: e.target.value })}
+                    value={form.type || ""}
                   />
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
@@ -289,6 +326,8 @@ const Events = () => {
                     placeholder="Start Date"
                     name="startDate"
                     required
+                    onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+                    value={form.startDate || ""}
                   />
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
@@ -301,6 +340,8 @@ const Events = () => {
                     placeholder="End Date"
                     name="endDate"
                     required
+                    onChange={(e) => setForm({ ...form, endDate: e.target.value })}
+                    value={form.endDate || ""}
                   />
                 </div>
               </div>

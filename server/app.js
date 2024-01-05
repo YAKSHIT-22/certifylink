@@ -1,44 +1,11 @@
-// const express = require('express');
-// const mongoose = require('mongoose');
-// const multer = require('multer');
-// const { postData } = require('./controllers');
-// const { certificate } = require('./controllers/certificate');
-// const connectDatabase = require('./config/database');
-// const ejs = require('ejs');
-
-// const app = express();
-// const port = 4000;
-
-// connectDatabase()
-
-// app.set('view engine', 'ejs');
-
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage: storage }).single('excelFile');
-
-// app.get('/', (req, res) => {
-//     res.render('index');
-// });
-// app.get('/download', async (req, res) => {
-//     const html = await ejs.renderFile("views/download.ejs", null, {
-//         async: true
-//     })
-
-//     res.send(html)
-//     return
-// });
-
-// app.post('/upload', upload, postData);
-// app.get('/certificate', certificate);
-
-// app.listen(port, () => {
-//     console.log(`Server is running on port ${port}`);
-// });
-
-
+const multer = require('multer');
 const express = require('express');
 const cors = require('cors');
 const connectDatabase = require('./config/database');
+
+//used for excel upload of data
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }).single('excelFile');
 
 const app = express();
 const port = 4000;
@@ -60,6 +27,8 @@ app.use("/api/v1/user", require("./routes/auth"));
 app.use("/api/v1/org", require("./routes/organization"));
 app.use("/api/v1/template", require("./routes/template"));
 app.use("/api/v1/event", require("./routes/event"));
+app.use("/api/v1/certificate", require("./routes/certificate"));
+
 app.get('/', (req, res) => {
     res.json({ message: 'Hello World!' });
 });
@@ -71,3 +40,39 @@ app.listen(port, () => {
 
 
 module.exports = app;
+
+
+// const express = require('express');
+// const mongoose = require('mongoose');
+
+// const { postData } = require('./controllers');
+// const { certificate } = require('./controllers/certificate');
+// const connectDatabase = require('./config/database');
+// const ejs = require('ejs');
+
+// const app = express();
+// const port = 4000;
+
+// connectDatabase()
+
+// app.set('view engine', 'ejs');
+
+
+// app.get('/', (req, res) => {
+//     res.render('index');
+// });
+// app.get('/download', async (req, res) => {
+//     const html = await ejs.renderFile("views/download.ejs", null, {
+//         async: true
+//     })
+
+//     res.send(html)
+//     return
+// });
+
+// app.post('/upload', upload, postData);
+// app.get('/certificate', certificate);
+
+// app.listen(port, () => {
+//     console.log(`Server is running on port ${port}`);
+// });

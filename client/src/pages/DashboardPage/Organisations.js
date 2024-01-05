@@ -21,8 +21,8 @@ const Organisations = () => {
   const [isActionModalOpen, setActionModal] = useState({});
   const [loading, setLoading] = useState(false)
   const [reload, setReload] = useState(false)
+  const [form, setForm] = useState({})
   const { org, setOrg, addOrg } = useOrganisationStore(state => state);
-  console.log(org)
   useEffect(() => {
     setLoading(true)
     publicApi.get("/api/v1/org")
@@ -47,9 +47,15 @@ const Organisations = () => {
       isOpen: true,
     });
     if (action === "edit") {
-
+      const org = data.find((e) => e.organizationId === id);
+      setForm({
+        ...org,
+      });
     } else if (action === "delete") {
-
+      const org = data.find((e) => e.organizationId === id);
+      setForm({
+        ...org,
+      });
     }
   };
   const handleActionsModalClose = () => {
@@ -58,33 +64,62 @@ const Organisations = () => {
       isOpen: false,
       action: "",
     });
-    // setForm({});
+    setForm({});
   };
+  console.log(form)
   const handleSubmit = async (e) => {
     if (isActionModalOpen.action === "edit") {
       e.preventDefault();
-      console.log("edit");
+      setLoading(true)
+      await publicApi.put(`/api/v1/org/${form._id}`, form)
+        .then((res) => {
+          toast.success(res.data.message)
+          e.target.reset();
+          setReload(!reload)
+          setActionModal({
+            ...isActionModalOpen,
+            isOpen: false,
+            action: "",
+          });
+          setForm({});
+        })
+        .catch((error) => toast.error(error.data.message))
+        .finally(() => setLoading(false))
     } else if (isActionModalOpen.action === "add") {
       e.preventDefault();
       setLoading(true)
-      await publicApi.post("/api/v1/org", {
-        eventName: e.target.eventName.value,
-        address: e.target.address.value,
-        type: e.target.type.value,
-        startDate: e.target.startDate.value,
-        endDate: e.target.endDate.value,
-      })
+      await publicApi.post("/api/v1/org", form)
         .then((res) => {
           toast.success(res.data.message)
           setOrg(res.data.data)
           e.target.reset();
+          setActionModal({
+            ...isActionModalOpen,
+            isOpen: false,
+            action: "",
+          });
+          setForm({});
         })
         .catch((error) => toast.error(error.message))
         .finally(() => setLoading(false))
     } else if (isActionModalOpen.action === "delete") {
-      // console.log("delete");
+      setLoading(true)
+      await publicApi.delete(`/api/v1/org/${form.oranizationId}`)
+        .then((res) => {
+          toast.success(res.data.message)
+          setReload(!reload)
+          setActionModal({
+            ...isActionModalOpen,
+            isOpen: false,
+            action: "",
+          });
+          setForm({})
+        })
+        .catch((error) => toast.error(error.data.message))
+        .finally(() => setLoading(false))
     }
   };
+
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
     switch (columnKey) {
@@ -238,22 +273,24 @@ const Organisations = () => {
                 isActionModalOpen.action === "edit"
                   ? "editorganization"
                   : isActionModalOpen.action === "add"
-                  ? "addorganization"
-                  : "deleteorganization"
+                    ? "addorganization"
+                    : "deleteorganization"
               }
               onSubmit={handleSubmit}
               className="flex items-center justify-center gap-4 flex-col"
             >
-              <div className="flex items-center justify-center gap-4 w-full flex-col">
+              <div className="flex text-white items-center justify-center gap-4 w-full flex-col">
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">
                     <icon.GoOrganization className="w-6 h-6 text-[#808080]" />
                   </div>
                   <input
                     type="text"
-                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Organization Name"
                     name="organizationName"
+                    onChange={(e) => setForm({ ...form, organizationName: e.target.value })}
+                    value={form.organizationName || ""}
                     required
                   />
                 </div>
@@ -263,9 +300,11 @@ const Organisations = () => {
                   </div>
                   <input
                     type="text"
-                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Email"
                     name="email"
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    value={form.email || ""}
                     required
                   />
                 </div>
@@ -275,10 +314,12 @@ const Organisations = () => {
                   </div>
                   <input
                     type="text"
-                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Organisation Type"
                     name="type"
                     required
+                    onChange={(e) => setForm({ ...form, type: e.target.value })}
+                    value={form.type || ""}
                   />
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
@@ -287,10 +328,12 @@ const Organisations = () => {
                   </div>
                   <input
                     type="text"
-                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-black border border-[#252525] rounded-[8px] focus:outline-none"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Mobile No."
                     name="mobile"
                     required
+                    onChange={(e) => setForm({ ...form, mobile: e.target.value })}
+                    value={form.mobile || ""}
                   />
                 </div>
               </div>

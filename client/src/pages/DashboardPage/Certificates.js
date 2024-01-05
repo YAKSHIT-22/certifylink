@@ -29,7 +29,7 @@ const Certificates = () => {
   const [isActionModalOpen, setActionModal] = useState({});
   const [form, setForm] = useState({});
   const [csv, setCsvUpload] = useState({});
-
+  const [reload, setReload] = useState(false)
   const handleFileChange = (e) => {
     setCsvUpload({
       file: e.target.files[0],
@@ -157,7 +157,7 @@ const Certificates = () => {
           <div className="flex items-end md:items-center justify-between text-white w-full md:flex-row flex-col gap-4">
             <p className="font-medium text-4xl">Upload Csv</p>
             <div className="flex items-center justify-end md:justify-center gap-4">
-              <button type="button">
+              <button type="button" onClick={() => setReload(!reload)}>
                 <icon.SlRefresh className="w-5 h-5 hover:rotate-[180deg] transition-all" />
               </button>
               <label

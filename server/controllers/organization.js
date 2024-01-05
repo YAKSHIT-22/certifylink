@@ -15,13 +15,16 @@ const createOrganization = async (req, res) => {
         })
     }
     try {
-        let data = await (new Organizations({
+        await (new Organizations({
             organizationName,
             email,
             type,
             mobile,
             createdBy: req.user
         })).save();
+        let data = await Organizations.find({
+            createdBy: req.user
+        });
         res.status(200).json({
             message: "Organization created",
             data

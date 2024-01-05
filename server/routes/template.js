@@ -3,7 +3,7 @@ const { verifyAuth } = require("../middleware/auth.js");
 const { createTemplate, getTemplates } = require("../controllers/template.js");
 const authRouter = express.Router();
 
-authRouter.post("/", createTemplate);
-authRouter.get("/", getTemplates);
+authRouter.post("/", verifyAuth, createTemplate);
+authRouter.get("/", verifyAuth, getTemplates);
 
 module.exports = authRouter;
