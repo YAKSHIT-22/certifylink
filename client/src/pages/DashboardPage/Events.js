@@ -20,7 +20,8 @@ const columns = [
 
 const Events = () => {
   const [isActionModalOpen, setActionModal] = useState({});
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [reload, setReload] = useState(false);
   const { events, setEvents } = useEventsStore(state => state)
   const handleActionsModal = ({ action, id = 0 }) => {
     setActionModal({
@@ -45,7 +46,6 @@ const Events = () => {
       isOpen: false,
       action: "",
     });
-    // setForm({});
   };
   useEffect(() => {
     setLoading(true)
@@ -55,7 +55,7 @@ const Events = () => {
         setLoading(false)
       })
       .catch((error) => console.log(error.message))
-  }, [])
+  }, [reload])
   const data = useMemo(() => {
     return events.map(e => {
       return {
@@ -159,7 +159,7 @@ const Events = () => {
           <div className="flex items-end md:items-center justify-between text-white w-full md:flex-row flex-col gap-4">
             <p className="font-medium text-4xl">Create Events</p>
             <div className="flex items-center justify-end md:justify-center gap-4">
-              <button type="button">
+              <button onClick={() => setReload(!reload)} type="button">
                 <icon.SlRefresh className="w-5 h-5 hover:rotate-[180deg] transition-all" />
               </button>
               <button

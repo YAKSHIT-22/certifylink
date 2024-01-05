@@ -49,7 +49,7 @@ const updateOrganization = async (req, res) => {
     const { id } = req.params;
     const { organizationName, email, type, mobile } = req.body;
     try {
-        let data = await Organizations.findByIdAndUpdate(id, {
+        await Organizations.findByIdAndUpdate(id, {
             $set: {
                 organizationName,
                 email,
@@ -57,6 +57,7 @@ const updateOrganization = async (req, res) => {
                 mobile,
             }
         }, { new: true });
+        let data = await Organizations.find();
         res.status(200).json({
             message: "Organization updated",
             data
@@ -64,10 +65,23 @@ const updateOrganization = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error" })
     }
-
 }
+
+const deleteOrganization = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Organizations.findByIdAndDelete(id);
+        res.status(200).json({
+            message: "Organization deleted",
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+}
+
 module.exports = {
     createOrganization,
     getOrganization,
     updateOrganization,
+    deleteOrganization
 }

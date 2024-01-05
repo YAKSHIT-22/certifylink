@@ -20,9 +20,12 @@ export const useAuthStore = create(
 
 
 export const useOrganisationStore = create((set) => ({
-    organisation: ({}),
-    setOrganisation: (organisation) => set((org) => ({
-        organisation: { ...org.organisation, ...organisation }
+    org: [],
+    setOrg: (data) => set({
+        org: data
+    }),
+    addOrg: (data) => set((state) => ({
+        org: [...state.org, data]
     })),
 }))
 
