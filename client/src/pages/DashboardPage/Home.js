@@ -18,9 +18,9 @@ const Home = () => {
     publicApi.get("/api/v1/dashboard")
       .then((res) => {
         setData({
-          events: res.data.events.length,
-          org: res.data.organizations.length,
-          templates: res.data.templates.length
+          events: res.data.events,
+          org: res.data.organizations,
+          templates: res.data.templates
         })
         setLoading(false)
       }).catch((error) => {
@@ -28,6 +28,7 @@ const Home = () => {
         setLoading(false)
       })
   }, []);
+  console.log(data)
   return (
     <DashboardContainer>
       <div className="flex items-center justify-center w-full h-full px-2">
@@ -37,14 +38,14 @@ const Home = () => {
           </div>
           <div className="flex items-center justify-center w-full h-full gap-4 flex-col">
             <div className="w-full grid md:grid-cols-3 grid-cols-1 items-center justify-center gap-4">
-              <DashboardHomeCard text={"Organisation Created"} value={data.org ?? 0} />
-              <DashboardHomeCard text={"Events Created"} value={data.events ?? 0} />
+              <DashboardHomeCard text={"Organisation Created"} value={data.org.length ?? 0} />
+              <DashboardHomeCard text={"Events Created"} value={data.events.length ?? 0} />
               <DashboardHomeCard text={"Subscription Plan"} value={"Free"} />
             </div>
             <div className="w-full grid md:grid-cols-2 grid-cols-1 items-center justify-center gap-4">
-              <div className="w-full md:col-span-2 lg:col-span-1 flex items-center justify-center gap-4 flex-col md:flex-row lg:flex-col">
-                <AnalyticCard heading={"Most Template Used"} />
-                <AnalyticCard heading={"Most Active Organisation"} />
+              <div className="w-full md:col-span-2 h-full lg:col-span-1 flex items-start justify-center gap-4 flex-col md:flex-row lg:flex-col">
+                <AnalyticCard heading={"Most Template Used"} data={data.templates} type="template" />
+                <AnalyticCard heading={"Most Active Organisation"} data={data.org} type="org" />
               </div>
               <div className="flex items-center justify-center text-white md:hidden lg:flex flex-col p-4 gap-4 w-full h-full rounded-md bg-[#181818] border border-[#222222]">
                 <div className="flex items-center justify-center px-2 w-full flex-col gap-4">

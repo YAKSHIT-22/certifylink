@@ -118,8 +118,10 @@ const updateUser = async (req, res) => {
                 age, gender, phone, bio
             }
         }, { new: true });
-
-        return res.status(200).json({ message: "User Update Successfully" })
+        user.password = undefined;
+        return res.status(200).json({
+            message: "User Update Successfully", user
+        })
     } catch (error) {
         console.log(error)
         res.status(500).json("Server Error");
