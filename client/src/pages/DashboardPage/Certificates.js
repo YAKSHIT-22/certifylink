@@ -18,15 +18,7 @@ const columns = [
   { name: "Actions", uid: "actions" },
 ];
 
-const users = [
-  {
-    certificateId: "#20462",
-    studentName: "lorem ipsum",
-    studentMobile: "+919416829839",
-    studentRoll: "2110991573",
-    eventsName: "2023-12-11",
-  },
-];
+
 
 const Certificates = () => {
   const [isActionModalOpen, setActionModal] = useState({});

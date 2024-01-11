@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const userSchema = mongoose.Schema({
     name: {
         type: String,
+        default: "The Unnamed"
         // required: true,
     },
     age: {

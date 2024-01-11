@@ -32,12 +32,7 @@ const createUser = async (req, res) => {
 
         res.status(201).json({
             message: "User credentials created",
-            data: {
-                name: data.name,
-                email: data.email,
-                _id: data._id,
-                phone: data.phone,
-            }
+            data,
         });
     } catch (err) {
         res.status(500).json({
