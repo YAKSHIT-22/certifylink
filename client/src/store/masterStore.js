@@ -42,7 +42,7 @@ export const useEventsStore = create((set) => ({
 }))
 
 export const useTemplateStore = create((set) => ({
-    template: ({}),
+    template: [],
     setTemplate: (template) => set((temp) => ({
         template: { ...temp.template, ...template }
     })),

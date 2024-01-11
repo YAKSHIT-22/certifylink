@@ -3,9 +3,31 @@ import DashboardContainer from "../../components/containers/DashboardContainer";
 import DashboardHomeCard from "../../components/pagesComponents/dashboardPage/DashboardHomeCard";
 import AnalyticCard from "../../components/pagesComponents/dashboardPage/AnalyticCard";
 import { useAuthStore } from "../../store/masterStore";
+import { publicApi } from "../../utils/app.utils";
 
 const Home = () => {
   const user = useAuthStore(state => state.user)
+  const [data, setData] = React.useState({
+    events: 0,
+    org: 0,
+    templates: 0
+  });
+  const [loading, setLoading] = React.useState(false);
+  React.useEffect(() => {
+    setLoading(true);
+    publicApi.get("/api/v1/dashboard")
+      .then((res) => {
+        setData({
+          events: res.data.events.length,
+          org: res.data.organizations.length,
+          templates: res.data.templates.length
+        })
+        setLoading(false)
+      }).catch((error) => {
+        console.log(error)
+        setLoading(false)
+      })
+  }, []);
   return (
     <DashboardContainer>
       <div className="flex items-center justify-center w-full h-full px-2">
@@ -15,8 +37,8 @@ const Home = () => {
           </div>
           <div className="flex items-center justify-center w-full h-full gap-4 flex-col">
             <div className="w-full grid md:grid-cols-3 grid-cols-1 items-center justify-center gap-4">
-              <DashboardHomeCard text={"Organisation Created"} value={"01"} />
-              <DashboardHomeCard text={"Events Created"} value={"01"} />
+              <DashboardHomeCard text={"Organisation Created"} value={data.org ?? 0} />
+              <DashboardHomeCard text={"Events Created"} value={data.events ?? 0} />
               <DashboardHomeCard text={"Subscription Plan"} value={"Free"} />
             </div>
             <div className="w-full grid md:grid-cols-2 grid-cols-1 items-center justify-center gap-4">

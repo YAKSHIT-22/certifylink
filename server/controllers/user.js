@@ -32,7 +32,11 @@ const createUser = async (req, res) => {
 
         res.status(201).json({
             message: "User credentials created",
-            data,
+            data: {
+                name: data?.name,
+                email: data.email,
+                phone: data?.phone
+            },
         });
     } catch (err) {
         res.status(500).json({
@@ -97,7 +101,7 @@ const loginUser = async (req, res) => {
 
 const getUser = async (req, res) => {
     try {
-        const user = await User.findById(req.user);
+        const user = await User.findById(req.user).select('-password');
         return res.status(200).json(user)
     } catch (error) {
         res.status(500).send("Server Error");
@@ -115,7 +119,7 @@ const updateUser = async (req, res) => {
             }
         }, { new: true });
 
-        return res.status(200).json({ message: "User Update Successfully", user })
+        return res.status(200).json({ message: "User Update Successfully" })
     } catch (error) {
         console.log(error)
         res.status(500).json("Server Error");

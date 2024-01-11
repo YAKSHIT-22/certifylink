@@ -28,7 +28,7 @@ const Login = () => {
       e.target.reset();
       return navigate("/dashboard/home");
     })
-      .catch((error) => setError(error))
+      .catch((error) => setError(error.response.data.message))
       .finally(() => setLoading(false))
   };
   return (
