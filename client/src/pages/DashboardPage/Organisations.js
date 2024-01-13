@@ -23,34 +23,6 @@ const Organisations = () => {
   const [reload, setReload] = useState(false);
   const [form, setForm] = useState({});
   const { organization, setOrg } = useOrganisationStore(state => state);
-
-  const handleActionsModal = ({ action, id = 0 }) => {
-    setActionModal({
-      ...isActionModalOpen,
-      action: action,
-      isOpen: true,
-    });
-    if (action === "edit") {
-      console.log('org','edit',id,organization)
-      const org = organization.find((e) => e._id === id);
-      setForm({
-        ...org,
-      });
-    } else if (action === "delete") {
-      const org = organization.find((e) => e._id === id);
-      setForm({
-        ...org,
-      });
-    }
-  };
-  const handleActionsModalClose = () => {
-    setForm({});
-    setActionModal({
-      ...isActionModalOpen,
-      isOpen: false,
-      action: "",
-    });
-  };
   useEffect(() => {
     setLoading(true);
     publicApi
@@ -60,15 +32,47 @@ const Organisations = () => {
         setLoading(false);
       })
       .catch((error) => console.log(error.message));
-  }, [reload]);
+  }, [reload, setOrg]);
+
   const data = useMemo(() => {
-    return organization.map(e => {
+    const newData = organization.map(e => {
       return {
         ...e,
         organizationId: e._id,
-      };
+        actions: e._id,
+      }
     });
+    return newData;
   }, [organization]);
+
+  const handleActionsModal = ({ action, id = 0 }) => {
+    if (action === "edit") {
+      const org = organization.find((e) => e._id === id);
+      console.log(org)
+      setForm({
+        ...org,
+      });
+    } else if (action === "delete") {
+      const org = organization.find((e) => e._id === id);
+      setForm({
+        ...org,
+      });
+    }
+    setActionModal({
+      ...isActionModalOpen,
+      action: action,
+      isOpen: true,
+    });
+  };
+  const handleActionsModalClose = () => {
+    setForm({});
+    setActionModal({
+      ...isActionModalOpen,
+      isOpen: false,
+      action: "",
+    });
+  };
+
   const handleSubmit = async (e) => {
     if (isActionModalOpen.action === "edit") {
       e.preventDefault();
@@ -77,7 +81,6 @@ const Organisations = () => {
         .put(`/api/v1/org/${form._id}`, form)
         .then((res) => {
           toast.success(res.data.message);
-          e.target.reset();
           setReload(!reload);
           setActionModal({
             ...isActionModalOpen,
@@ -171,11 +174,12 @@ const Organisations = () => {
           <div className="relative flex items-center gap-2">
             <Tooltip content="Edit Organisation" className="!text-white">
               <span
-                onClick={() =>
+                onClick={() => {
                   handleActionsModal({
                     action: "edit",
                     id: user.organizationId,
                   })
+                }
                 }
                 className="text-lg text-white cursor-pointer active:opacity-50"
               >
@@ -184,11 +188,12 @@ const Organisations = () => {
             </Tooltip>
             <Tooltip color="danger" content="Delete Organisation">
               <span
-                onClick={() =>
+                onClick={() => {
                   handleActionsModal({
                     action: "delete",
                     id: user.organizationId,
                   })
+                }
                 }
                 className="text-lg text-danger cursor-pointer active:opacity-50"
               >
@@ -237,8 +242,8 @@ const Organisations = () => {
           isActionModalOpen.action === "edit"
             ? "Edit Organization"
             : isActionModalOpen.action === "add"
-            ? "Add Organization"
-            : "Delete Organization"
+              ? "Add Organization"
+              : "Delete Organization"
         }
         isOpen={isActionModalOpen.isOpen}
         onClose={handleActionsModalClose}
@@ -246,15 +251,15 @@ const Organisations = () => {
           isActionModalOpen.action === "edit"
             ? "Edit Organization"
             : isActionModalOpen.action === "add"
-            ? "Add Organization"
-            : "Delete Organization"
+              ? "Add Organization"
+              : "Delete Organization"
         }
         formid={
           isActionModalOpen.action === "edit"
             ? "editorganization"
             : isActionModalOpen.action === "add"
-            ? "addorganization"
-            : ""
+              ? "addorganization"
+              : ""
         }
         onSubmit={handleSubmit}
         ctaClass={isActionModalOpen.action === "delete" ? "danger" : "primary"}
@@ -285,8 +290,8 @@ const Organisations = () => {
                 isActionModalOpen.action === "edit"
                   ? "editorganization"
                   : isActionModalOpen.action === "add"
-                  ? "addorganization"
-                  : "deleteorganization"
+                    ? "addorganization"
+                    : "deleteorganization"
               }
               onSubmit={handleSubmit}
               className="flex items-center justify-center gap-4 flex-col"

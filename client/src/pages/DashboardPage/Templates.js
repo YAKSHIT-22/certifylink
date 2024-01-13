@@ -1,60 +1,50 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import DashboardContainer from '../../components/containers/DashboardContainer'
 import { useCsvStore, useEventsStore, useOrganisationStore, useTemplateStore } from '../../store/masterStore'
+import { publicApi } from '../../utils/app.utils';
 
 const Templates = () => {
   const [form, setForm] = React.useState({});
-  const { organization } = useOrganisationStore(state => state);
-  const { events } = useEventsStore(state => state);
-  const {csv} = useCsvStore(state => state);  
-  //const { template } = useTemplateStore();
-  const template = [
-    {
-      _id: 1,
-      name: 'Template 1',
-      image: 'https://image.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg',
-    },
-    {
-      _id: 2,
-      name: 'Template 2',
-      image: 'https://image.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg',
-
-    },
-    {
-      _id: 3,
-      name: 'Template 3',
-      image: 'https://image.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg',
-
-    },
-    {
-      _id: 4,
-      name: 'Template 4',
-      image: 'https://image.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg',
-
-    },
-    {
-      _id: 5,
-      name: 'Template 5',
-      image: 'https://image.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg',
-
-    },
-    {
-      _id: 6,
-      name: 'Template 6',
-      image: 'https://image.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg',
+  const { organization, setOrg } = useOrganisationStore(state => state);
+  const { events, setEvents } = useEventsStore(state => state);
+  const { template, setTemplate } = useTemplateStore(state => state);
+  const { csv } = useCsvStore(state => state);
+  const [reload, setReload] = useState(false)
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    try {
+      setLoading(true)
+      publicApi.get("/api/v1/template")
+        .then((res) => {
+          setTemplate(res.data.templates)
+          console.log(res.data.templates)
+          setEvents(res.data.events)
+          setOrg(res.data.organizations)
+        })
+    } catch (error) {
+      console.log(error)
     }
-  ]
+    finally {
+      setLoading(false)
+    }
+  }, [reload])
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
   return (
     <DashboardContainer>
       <div className="flex items-center justify-center w-full h-full px-2">
         <div className="w-full flex items-center justify-center flex-col gap-4">
-           <div className="w-full flex items-center md:flex-row flex-col justify-between gap-4">
+          <div className="w-full flex items-center md:flex-row flex-col justify-between gap-4">
             <div className="flex items-center gap-4 justify-center sm:flex-row flex-col">
               <div className="flex items-center justify-center bg-[#181818] border border-[#222222] p-2">
-                <select value={form.organizationName || ""} className='outline-none border-0 !bg-transparent text-white'>
+                <select value={form.organizationName || ""} name='organizationName' onChange={handleChange} className='outline-none border-0 !bg-transparent text-white'>
                   <option disabled value="">Select Organization</option>
-                  {organization.map((org) => (
-                    <option className='bg-[#181818]' key={org._id} value={org.name}>
+                  {organization?.map((org) => (
+                    <option className='bg-[#181818]' key={org._id} value={org.organizationName}>
                       {org.organizationName}
                     </option>
                   )
@@ -62,40 +52,45 @@ const Templates = () => {
                 </select>
               </div>
               <div className="flex items-center justify-center bg-[#181818] border border-[#222222] p-2">
-                <select value={form.eventsName || ""} className='outline-none border-0 !bg-transparent text-white'>
+                <select value={form.eventName || ""} name='eventName' onChange={handleChange} className='outline-none border-0 !bg-transparent text-white'>
                   <option disabled value="">Select Event</option>
-                  {events.map((event) => (
-                    <option className='bg-[#181818]' key={event._id} value={event.name}>
+                  {events?.map((event) => (
+                    <option className='bg-[#181818]' key={event._id} value={event.eventName}>
                       {event.eventName}
                     </option>
                   )
                   )}
                 </select>
               </div>
-              </div>
-
-              <div className='flex items-center justify-center'>
-                <button className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2">
-                  <p className='text-white font-bold'>{(form.temp && csv) ? "Create" : "Upload Csv First"}</p>
-                </button> 
-              </div>
             </div>
-             <div className="w-full grid items-center justify-center gap-6 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
-              {template.map((temp) => (
-                <div key={temp._id} onClick={()=>{setForm(
-                  ...form,
-                  temp
-                )}} className="flex items-center relative justify-center w-full h-full flex-col gap-3">
-                    <div className="flex w-full h-full items-center justify-center">
-                      <img src={temp.image} alt={temp.name} className="w-full h-full lg:h-full xl:h-60 xl:object-cover xl:object-center object-contain rounded-md" />
-                    </div>
-                    <div className="absolute right-3 top-2 flex items-center justify-center">
-                      <p className='text-white font-bold'>{temp.name}</p>
-                    </div>
+
+            <div className='flex items-center justify-center'>
+              <button className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2">
+                <p className='text-white font-bold'>{(form.temp && csv) ? "Create" : "Upload Csv First"}</p>
+              </button>
+            </div>
+          </div>
+          <div className="w-full grid items-center justify-center gap-6 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+            {!template?.length > 0 ? <p className='text-white font-bold text-center w-full md:col-span-3 sm:col-span-2 col-span-1 py-10'>
+              No templates found
+            </p>
+              :
+              template.map((temp) => (
+                <div key={temp._id} onClick={() => {
+                  setForm(
+                    { ...temp }
+                  )
+                }} className="flex items-center relative justify-center w-full h-full flex-col gap-3">
+                  <div className="flex w-full h-full items-center justify-center">
+                    <img src={temp.templateImage} alt={temp.templateName} className="w-full h-full lg:h-full xl:h-60 xl:object-cover xl:object-center object-contain rounded-md" />
+                  </div>
+                  <div className="absolute right-3 top-2 flex items-center justify-center">
+                    <p className='text-black font-bold'>{temp.templateName}</p>
+                  </div>
                 </div>
               )
               )}
-             </div>
+          </div>
         </div>
       </div>
     </DashboardContainer>

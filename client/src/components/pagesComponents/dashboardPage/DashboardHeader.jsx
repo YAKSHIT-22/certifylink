@@ -9,6 +9,7 @@ import { IoMdLogOut } from "react-icons/io";
 import DashboardLinks from "../../minorComponents/DashboardLinks";
 import { useAuthStore } from "../../../store/masterStore";
 import toast from "react-hot-toast";
+import { publicApi } from "../../../utils/app.utils";
 
 const DashboardHeader = () => {
   const { clearUser } = useAuthStore(state => state)
@@ -50,6 +51,7 @@ const DashboardHeader = () => {
             </div>
             <div className="flex items-center justify-center w-full">
               <button onClick={() => {
+                publicApi.get("/api/v1/user/signout");
                 clearUser()
                 toast.success("Logged out!")
               }} className="text-lg font-semibold flex items-center justify-center gap-2 text-red-600">

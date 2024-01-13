@@ -23,19 +23,28 @@ const Profile = () => {
     setForm({ ...form, [name]: value });
   };
   const handleImageChange = (e) => {
+    e.preventDefault();
     const file = e.target.files[0];
-    setForm({ ...form, img: file });
-  }; 
+    setFileBase(file);
+  };
+  const setFileBase = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setForm({ ...form, img: reader.result })
+    };
+  };
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     publicApi.put("/api/v1/user/update", form)
       .then((res) => {
         setUser(res.data.user);
+        setForm({ ...form, img: undefined })
         toast.success("User profile updated successfully🚀");
         e.target.reset();
       })
-      .catch((error) => toast.error(error))
+      .catch((error) => toast.error(error.message))
       .finally(() => setLoading(false))
   };
   return (
@@ -43,24 +52,34 @@ const Profile = () => {
       <div className="flex items-center justify-center w-full h-full">
         <div className="flex items-center justify-center w-full h-full px-2 flex-col">
           <div className="w-full h-28 border lg:flex hidden border-[#222222] bg-[#181818]"></div>
-          <div className="flex w-full lg:max-w-3xl items-center justify-center lg:mt-[-4.25rem]  gap-2 flex-col bg-[#222222] border-[#181818] py-4 px-4 lg:p-4 rounded-md">
+          <form onSubmit={onSubmit} className="flex w-full lg:max-w-3xl items-center justify-center lg:mt-[-4.25rem]  gap-2 flex-col bg-[#222222] border-[#181818] py-4 px-4 lg:p-4 rounded-md">
             <div className="flex items-center justify-center w-full flex-col">
               <div className="flex items-center justify-between w-full">
                 <h3 className="text-sm font-normal text-white">My Profile</h3>
-                <label className="py-1 px-4 bg-[#181818] border-[#222222] text-white rounded-md">
-                  <p className="text-xs font-normal">Upload Image</p>
-                  <input hidden type="file" onChange={handleImageChange} multiple={false} id="img" name="img" accept="image/*" />
-                </label>
+                <div className="flex flex-col gap-2">
+                  <label className="py-1 px-4 bg-[#181818] border-[#222222] text-sm text-white rounded-md">
+                    {!form.img &&
+                      "Upload Image"
+                    }
+                    <input hidden type="file" onChange={handleImageChange} multiple={false} id="img" name="img" accept="image/*" />
+                    {
+                      form.img && <button disabled={loading} type="submit" className="text-xs text-white bg-[#ff0000] w-full px-2 py-1 rounded-md">Save</button>
+                    }
+                  </label>
+                  <span className="text-xs text-white">
+                    *upload images upto 1MB
+                  </span>
+                </div>
               </div>
               <div className="flex items-center justify-center p-2">
                 <img
                   src={user?.img}
                   alt=""
-                  className="w-[4.25rem] h-[4.25rem] rounded-full"
+                  className="w-[4.25rem] h-[4.25rem] object-cover rounded-full"
                 />
               </div>
             </div>
-            <form onSubmit={onSubmit} className="flex items-center justify-center w-full text-white flex-col px-6 py-4 md:py-3 lg:py-4  bg-[#181818] border-[#222222] rounded-sm gap-2">
+            <div className="flex items-center justify-center w-full text-white flex-col px-6 py-4 md:py-3 lg:py-4  bg-[#181818] border-[#222222] rounded-sm gap-2">
               <div className="flex items-center justify-center w-full md:flex-row flex-col gap-2">
                 <label className="flex w-full items-center justify-start">
                   Name
@@ -147,8 +166,8 @@ const Profile = () => {
                   Update Profile
                 </button>
               </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </DashboardContainer>

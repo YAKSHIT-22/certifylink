@@ -47,7 +47,7 @@ export const useTemplateStore = create(
   persist(
     (set) => ({
       template: [],
-      setTemplate: (template) => set((temp) => ({ template: { ...temp.template, ...template } })),
+      setTemplate: (template) => set({ template: template }),
     }),
     {
       name: 'template',

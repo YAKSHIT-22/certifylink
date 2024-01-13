@@ -66,11 +66,11 @@ const getDashboardData = async (req, res) => {
                             $unionWith: {
                                 coll: "templates",
                                 pipeline: [
-                                    {
-                                        $match: {
-                                            createdBy: new mongoose.Types.ObjectId(req.user),
-                                        },
-                                    },
+                                    // {
+                                    //     $match: {
+                                    //         createdBy: new mongoose.Types.ObjectId(req.user),
+                                    //     },
+                                    // },
                                     {
                                         $project: {
                                             _id: 1,

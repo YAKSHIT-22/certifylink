@@ -1,24 +1,28 @@
+const { default: mongoose } = require("mongoose");
+const cloudinary = require("../config/cloudinary");
 const Template = require("../models/templateSchema");
 
 const createTemplate = async (req, res) => {
-    const { templateName, organization, event } = req.body;
-    if (!templateName || !organization || !event) {
-        return res.status(400).json({
-            message: "All fields are required",
-        });
-    }
-    const existingTemplate = await Template.findOne({ templateName: templateName })
-    if (existingTemplate) {
-        return res.status(400).json({
-            success: false,
-            message: "Template Already Exists"
-        })
-    }
+    const { templateName, organization, event, img } = req.body;
     try {
+        let image;
+        try {
+            image = await cloudinary.uploader.upload(img,
+                {
+                    folder: "CertifyLinkTemplates",
+
+                })
+        } catch (error) {
+            console.log(error)
+            return res.status(413).json({
+                message: "Image Size Too Large"
+            })
+        }
         let data = await (new Template({
             templateName,
             organization,
             event,
+            templateImage: image.secure_url
         })).save();
         res.status(200).json({
             message: "Template created",
@@ -32,10 +36,99 @@ const createTemplate = async (req, res) => {
 
 const getTemplates = async (req, res) => {
     try {
-        const templates = await Template.find()
+        const data = await Template.aggregate([
+            {
+                $facet: {
+                    organizations: [
+                        {
+                            $match: {
+                                business: ""
+                            }
+                        },
+                        {
+                            $unionWith: {
+                                coll: "organizations",
+                                pipeline: [
+                                    {
+                                        $match: {
+                                            createdBy: new mongoose.Types.ObjectId(req.user),
+                                        },
+                                    },
+                                    {
+                                        $project: {
+                                            _id: 1,
+                                            organizationName: 1,
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    events: [
+                        {
+                            $match: {
+                                business: "",
+                            },
+                        },
+                        {
+                            $unionWith: {
+                                coll: "events",
+                                pipeline: [
+                                    {
+                                        $match: {
+                                            createdBy: new mongoose.Types.ObjectId(req.user),
+                                        },
+                                    },
+                                    {
+                                        $project: {
+                                            _id: 1,
+                                            eventName: 1,
+                                        },
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                    templates: [
+                        {
+                            $group: {
+                                _id: "$_id",
+                                templateName: { $first: "$templateName" },
+                                templateImage: { $first: "$templateImage" },
+                                organization: { $first: "$organization" },
+                                event: { $first: "$event" },
+                            }
+                        },
+                        {
+                            $project: {
+                                _id: 1,
+                                templateName: 1,
+                                templateImage: 1,
+                                // organization: 1,
+                                // event: 1,
+                            }
+                        },
+                        {
+                            $sort: {
+                                templateName: 1
+                            }
+                        }
+
+                    ],
+                }
+            },
+            {
+                $project: {
+                    organizations: 1,
+                    events: 1,
+                    templates: 1,
+                }
+            }
+        ])
+
         res.status(200).json({
-            message: "Organization fetched",
-            templates
+            message: "Data fetched",
+            ...data[0]
         });
     }
     catch (error) {

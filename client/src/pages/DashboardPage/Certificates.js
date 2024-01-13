@@ -27,12 +27,10 @@ const Certificates = () => {
   const [reload, setReload] = useState(false)
   const [loading, setLoading] = useState(false)
   const { csv, setCsv } = useCsvStore();
-
   useEffect(() => {
     setLoading(true)
     publicApi.get("/api/v1/certificate")
       .then((res) => {
-        console.log(res.data.data)
         setCsv(res.data.data)
         setLoading(false)
       })
@@ -104,8 +102,8 @@ const Certificates = () => {
     })
       .then((res) => {
         toast.success(res.data.message)
-        setCsvUpload({})
         setReload(!reload)
+        setCsvUpload({})
       })
       .catch((error) => {
         toast.error(error.message)

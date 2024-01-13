@@ -34,7 +34,7 @@ const SignUp = () => {
         e.target.reset();
         return navigate("/login");
       })
-      .catch((error) => setError(error))
+      .catch((error) => setError(error.response.data.message))
       .finally(() => setLoading(false));
   };
 

@@ -17,10 +17,11 @@ app.use(cors({
     ],
     credentials: true
 }));
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(require("cookie-parser")());
-
+app.use(express.json({
+    limit: '50mb'
+}));
 connectDatabase();
 
 app.use("/api/v1/user", require("./routes/auth"));

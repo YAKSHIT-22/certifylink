@@ -1,6 +1,7 @@
 const User = require("../models/userSchema.js");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
+const cloudinary = require("../config/cloudinary.js");
 
 const createUser = async (req, res) => {
     try {
@@ -110,12 +111,28 @@ const getUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        const { name, email, age, gender, phone, bio } = req.body;
+        const { name, email, age, gender, phone, bio, img } = req.body;
+        let details;
+        if (img) {
+            try {
+                details = await cloudinary.uploader.upload(img,
+                    {
+                        folder: "CertifyLinkProfiles",
+
+                    })
+            } catch (error) {
+                console.log(error)
+                return res.status(413).json({
+                    message: "Image Size Too Large"
+                })
+            }
+        }
         const user = await User.findByIdAndUpdate(req.user, {
             $set: {
                 name,
                 email: email,
-                age, gender, phone, bio
+                age, gender, phone, bio,
+                img: img && details.secure_url
             }
         }, { new: true });
         user.password = undefined;
@@ -128,9 +145,20 @@ const updateUser = async (req, res) => {
     }
 }
 
+const logoutUser = async (req, res) => {
+    try {
+        res.clearCookie('x-auth-token');
+        return res.status(200).json("Logged Out")
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json("Server Error");
+    }
+}
+
 module.exports = {
     createUser,
     loginUser,
     getUser,
-    updateUser
+    updateUser,
+    logoutUser
 };
