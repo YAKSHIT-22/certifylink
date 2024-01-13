@@ -61,7 +61,7 @@ export const useCsvStore = create(
     (set) => ({
       csv: [],
       setCsv: (data) => set({ csv: data }),
-      addCsv: (csv) => set((state) => ({ csv: [...state.csv, csv] })),
+      clearCsv: () => set({ csv: [] })
     }),
     {
       name: 'csv',

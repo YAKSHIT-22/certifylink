@@ -20,14 +20,13 @@ const columns = [
 ];
 
 
-
 const Certificates = () => {
   const [isActionModalOpen, setActionModal] = useState({});
   const [form, setForm] = useState({});
   const [csvUpload, setCsvUpload] = useState({});
   const [reload, setReload] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { csv, setCsv, addCsv } = useCsvStore();
+  const { csv, setCsv } = useCsvStore();
 
   useEffect(() => {
     setLoading(true)
@@ -45,11 +44,11 @@ const Certificates = () => {
       return {
         ...e,
         certificateId: e._id,
-        studentName: e.Name,
-        studentMobile: e.Mobile,
-        studentRoll: e.rollNo,
-        eventsName: e.eventName,
-        studentEmail: e.Email
+        studentName: e.studentName,
+        studentMobile: e.studentMobile,
+        studentRoll: e.studentRoll,
+        eventsName: e.eventsName,
+        studentEmail: e.studentEmail
       }
     })
   }, [csv])
