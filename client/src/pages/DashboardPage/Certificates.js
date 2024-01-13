@@ -15,6 +15,7 @@ const columns = [
   { name: "Student Mobile", uid: "studentMobile" },
   { name: "Student Roll", uid: "studentRoll" },
   { name: "Events Name", uid: "eventsName" },
+  {name : "Student Email", uid: "studentEmail"},
   { name: "Actions", uid: "actions" },
 ];
 
@@ -27,6 +28,7 @@ const Certificates = () => {
   const [reload, setReload] = useState(false)
   const [loading, setLoading] = useState(false)
   const { csv, setCsv, addCsv } = useCsvStore();
+
   useEffect(() => {
     setLoading(true)
     publicApi.get("/api/v1/certificate")
@@ -37,6 +39,7 @@ const Certificates = () => {
       })
       .catch((error) => toast.error(error.message))
   }, [reload])
+
   const data = React.useMemo(() => {
     return csv.map(e => {
       return {
@@ -46,6 +49,7 @@ const Certificates = () => {
         studentMobile: e.Mobile,
         studentRoll: e.rollNo,
         eventsName: e.eventName,
+        studentEmail: e.Email
       }
     })
   }, [csv])
@@ -67,11 +71,11 @@ const Certificates = () => {
     if (action === "edit") {
       setForm({
         ...form,
-        boardroomId: id,
+        certificateId: id,
       });
     } else if (action === "delete") {
       setForm({
-        boardroomId: id,
+        certificateId: id,
       });
     }
   };
@@ -143,6 +147,12 @@ const Certificates = () => {
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
+      case "studentEmail":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue}</p>
+          </div>
+        );
 
       case "actions":
         return (
@@ -190,7 +200,7 @@ const Certificates = () => {
                 htmlFor="upload"
                 className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2"
               >
-                {csvUpload.uploaded ? "File Upload Done" : "Upload"}
+                {csvUpload.uploaded ? "File Upload Initiating" : "Upload"}
                 <icon.MdUpload className="w-4 h-4" />
                 <input
                   hidden
@@ -239,7 +249,7 @@ const Certificates = () => {
         formid={
           isActionModalOpen.action === "edit"
             ? "editstudentdetails"
-            : "deletestudent"
+            : ""
         }
         onSubmit={handleSubmit}
         ctaClass={isActionModalOpen.action === "delete" ? "danger" : "primary"}
@@ -336,6 +346,20 @@ const Certificates = () => {
                     onChange={handleInputChange}
                     value={form.eventName || ""}
                     name="eventName"
+                    required
+                  />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <icon.MdOutlineMailOutline className="w-6 h-6 text-[#808080]" />
+                  </div>
+                  <input
+                    type="text"
+                    className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
+                    placeholder="Student Email"
+                    onChange={handleInputChange}
+                    value={form.studentEmail || ""}
+                    name="studentEmail"
                     required
                   />
                 </div>

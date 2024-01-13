@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DashboardContainer from "../../components/containers/DashboardContainer";
 import TableContainer from "../../components/containers/TableContainer";
 import ModalContainer from "../../components/containers/ModalContainer";
@@ -19,27 +19,11 @@ const columns = [
 
 const Organisations = () => {
   const [isActionModalOpen, setActionModal] = useState({});
-  const [loading, setLoading] = useState(false)
-  const [reload, setReload] = useState(false)
-  const [form, setForm] = useState({})
-  const { org, setOrg, addOrg } = useOrganisationStore(state => state);
-  useEffect(() => {
-    setLoading(true)
-    publicApi.get("/api/v1/org")
-      .then((res) => {
-        setOrg(res.data.data)
-        setLoading(false)
-      })
-      .catch((error) => console.log(error.message))
-  }, [reload])
-  const data = React.useMemo(() => {
-    return org.map(e => {
-      return {
-        ...e,
-        organizationId: e._id,
-      }
-    })
-  }, [org])
+  const [loading, setLoading] = useState(false);
+  const [reload, setReload] = useState(false);
+  const [form, setForm] = useState({});
+  const { organization, setOrg } = useOrganisationStore(state => state);
+
   const handleActionsModal = ({ action, id = 0 }) => {
     setActionModal({
       ...isActionModalOpen,
@@ -47,35 +31,54 @@ const Organisations = () => {
       isOpen: true,
     });
     if (action === "edit") {
-      const org = data.find((e) => e.organizationId === id);
+      console.log('org','edit',id,organization)
+      const org = organization.find((e) => e._id === id);
       setForm({
         ...org,
       });
     } else if (action === "delete") {
-      const org = data.find((e) => e.organizationId === id);
+      const org = organization.find((e) => e._id === id);
       setForm({
         ...org,
       });
     }
   };
   const handleActionsModalClose = () => {
+    setForm({});
     setActionModal({
       ...isActionModalOpen,
       isOpen: false,
       action: "",
     });
-    setForm({});
   };
-  console.log(form)
+  useEffect(() => {
+    setLoading(true);
+    publicApi
+      .get("/api/v1/org")
+      .then((res) => {
+        setOrg(res.data.data);
+        setLoading(false);
+      })
+      .catch((error) => console.log(error.message));
+  }, [reload]);
+  const data = useMemo(() => {
+    return organization.map(e => {
+      return {
+        ...e,
+        organizationId: e._id,
+      };
+    });
+  }, [organization]);
   const handleSubmit = async (e) => {
     if (isActionModalOpen.action === "edit") {
       e.preventDefault();
-      setLoading(true)
-      await publicApi.put(`/api/v1/org/${form._id}`, form)
+      setLoading(true);
+      await publicApi
+        .put(`/api/v1/org/${form._id}`, form)
         .then((res) => {
-          toast.success(res.data.message)
+          toast.success(res.data.message);
           e.target.reset();
-          setReload(!reload)
+          setReload(!reload);
           setActionModal({
             ...isActionModalOpen,
             isOpen: false,
@@ -84,14 +87,15 @@ const Organisations = () => {
           setForm({});
         })
         .catch((error) => toast.error(error.data.message))
-        .finally(() => setLoading(false))
+        .finally(() => setLoading(false));
     } else if (isActionModalOpen.action === "add") {
       e.preventDefault();
-      setLoading(true)
-      await publicApi.post("/api/v1/org", form)
+      setLoading(true);
+      await publicApi
+        .post("/api/v1/org", form)
         .then((res) => {
-          toast.success(res.data.message)
-          setOrg(res.data.data)
+          toast.success(res.data.message);
+          setOrg(res.data.data);
           e.target.reset();
           setActionModal({
             ...isActionModalOpen,
@@ -101,25 +105,25 @@ const Organisations = () => {
           setForm({});
         })
         .catch((error) => toast.error(error.message))
-        .finally(() => setLoading(false))
+        .finally(() => setLoading(false));
     } else if (isActionModalOpen.action === "delete") {
-      setLoading(true)
-      await publicApi.delete(`/api/v1/org/${form.oranizationId}`)
+      setLoading(true);
+      await publicApi
+        .delete(`/api/v1/org/${form._id}`)
         .then((res) => {
-          toast.success(res.data.message)
-          setReload(!reload)
+          toast.success(res.data.message);
+          setReload(!reload);
           setActionModal({
             ...isActionModalOpen,
             isOpen: false,
             action: "",
           });
-          setForm({})
+          setForm({});
         })
         .catch((error) => toast.error(error.data.message))
-        .finally(() => setLoading(false))
+        .finally(() => setLoading(false));
     }
   };
-
 
   const handleInputChange = (e) => {
     setForm({
@@ -146,7 +150,7 @@ const Organisations = () => {
       case "email":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+            <p className="text-bold text-sm">{cellValue}</p>
           </div>
         );
       case "type":
@@ -233,8 +237,8 @@ const Organisations = () => {
           isActionModalOpen.action === "edit"
             ? "Edit Organization"
             : isActionModalOpen.action === "add"
-              ? "Add Organization"
-              : "Delete Organization"
+            ? "Add Organization"
+            : "Delete Organization"
         }
         isOpen={isActionModalOpen.isOpen}
         onClose={handleActionsModalClose}
@@ -242,15 +246,15 @@ const Organisations = () => {
           isActionModalOpen.action === "edit"
             ? "Edit Organization"
             : isActionModalOpen.action === "add"
-              ? "Add Organization"
-              : "Delete Organization"
+            ? "Add Organization"
+            : "Delete Organization"
         }
         formid={
           isActionModalOpen.action === "edit"
             ? "editorganization"
             : isActionModalOpen.action === "add"
-              ? "addorganization"
-              : "deleteorganization"
+            ? "addorganization"
+            : ""
         }
         onSubmit={handleSubmit}
         ctaClass={isActionModalOpen.action === "delete" ? "danger" : "primary"}
@@ -281,8 +285,8 @@ const Organisations = () => {
                 isActionModalOpen.action === "edit"
                   ? "editorganization"
                   : isActionModalOpen.action === "add"
-                    ? "addorganization"
-                    : "deleteorganization"
+                  ? "addorganization"
+                  : "deleteorganization"
               }
               onSubmit={handleSubmit}
               className="flex items-center justify-center gap-4 flex-col"

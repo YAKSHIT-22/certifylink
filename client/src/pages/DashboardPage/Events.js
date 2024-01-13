@@ -22,8 +22,9 @@ const Events = () => {
   const [isActionModalOpen, setActionModal] = useState({});
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(false);
-  const { events, setEvents } = useEventsStore(state => state)
   const [form, setForm] = useState({})
+  const { events, setEvents } = useEventsStore(state => state);
+
   const handleActionsModal = ({ action, id = 0 }) => {
     setActionModal({
       ...isActionModalOpen,
@@ -31,11 +32,13 @@ const Events = () => {
       isOpen: true,
     });
     if (action === "edit") {
+      console.log("edit",id,events)
       const event = events.find((e) => e._id === id);
       setForm({
         ...event,
       });
     } else if (action === "delete") {
+      console.log("delete",id,events)
       const event = events.find((e) => e._id === id);
       setForm({
         ...event,
@@ -43,6 +46,7 @@ const Events = () => {
     }
   };
   const handleActionsModalClose = () => {
+    setForm({});
     setActionModal({
       ...isActionModalOpen,
       isOpen: false,
@@ -102,9 +106,11 @@ const Events = () => {
         })
         .catch((error) => toast.error(error.data.message))
         .finally(() => setLoading(false))
-    } else if (isActionModalOpen.action === "delete") {
+    } 
+    else if (isActionModalOpen.action === "delete") {
+      console.log(form)
       setLoading(true)
-      await publicApi.delete(`/api/v1/org/${form.oranizationId}`)
+      await publicApi.delete(`/api/v1/event/${form._id}`)
         .then((res) => {
           toast.success(res.data.message)
           setReload(!reload)
@@ -242,7 +248,7 @@ const Events = () => {
             ? "editevents"
             : isActionModalOpen.action === "add"
               ? "addevents"
-              : "deleteevents"
+              : ""
         }
         onSubmit={handleSubmit}
         ctaClass={isActionModalOpen.action === "delete" ? "danger" : "primary"}

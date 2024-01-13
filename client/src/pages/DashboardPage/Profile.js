@@ -22,6 +22,10 @@ const Profile = () => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setForm({ ...form, img: file });
+  }; 
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -45,7 +49,7 @@ const Profile = () => {
                 <h3 className="text-sm font-normal text-white">My Profile</h3>
                 <label className="py-1 px-4 bg-[#181818] border-[#222222] text-white rounded-md">
                   <p className="text-xs font-normal">Upload Image</p>
-                  <input hidden type="file" multiple={false} id="img" name="img" accept="image/*" />
+                  <input hidden type="file" onChange={handleImageChange} multiple={false} id="img" name="img" accept="image/*" />
                 </label>
               </div>
               <div className="flex items-center justify-center p-2">
@@ -125,8 +129,7 @@ const Profile = () => {
                 <textarea
                   type="text"
                   rows={2}
-                  maxRows={2}
-                  maxLength={250}
+                  maxLength={100}
                   className="flex bg-transparent text-sm w-full pl-3 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                   placeholder="Your Bio"
                   name="bio"

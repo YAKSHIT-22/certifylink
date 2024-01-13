@@ -1,60 +1,71 @@
-import { create } from 'zustand'
-import { createJSONStorage, persist } from "zustand/middleware"
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export const useAuthStore = create(
-    persist(
-        (set) => ({
-            user: null,
-            setUser: (data) => set({
-                user: { ...data }
-            }),
-            clearUser: () => set({
-                user: null
-            })
-        }),
-        {
-            name: 'user',
-            storage: createJSONStorage(() => localStorage)
-        },
-    ),
+  persist(
+    (set) => ({
+      user: null,
+      setUser: (data) => set({ user: { ...data } }),
+      clearUser: () => set({ user: null }),
+    }),
+    {
+      name: 'user',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
 );
 
-
-export const useOrganisationStore = create((set) => ({
-    org: [],
-    setOrg: (data) => set({
-        org: data
+export const useOrganisationStore = create(
+  persist(
+    (set) => ({
+      organization: [],
+      setOrg: (data) => set({ organization: data }),
+      addOrg: (data) => set((state) => ({ organization: [...state.organization, data] })),
     }),
-    addOrg: (data) => set((state) => ({
-        org: [...state.org, data]
-    })),
-}))
+    {
+      name: 'organization',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
 
-
-export const useEventsStore = create((set) => ({
-    events: [],
-    setEvents: (data) => set({
-        events: data
+export const useEventsStore = create(
+  persist(
+    (set) => ({
+      events: [],
+      setEvents: (data) => set({ events: data }),
+      addEvent: (event) => set((state) => ({ events: [...state.events, event] })),
     }),
-    addEvent: (event) => set((state) => ({
-        events: [...state.events, event]
-    })),
-}))
+    {
+      name: 'events',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
 
-export const useTemplateStore = create((set) => ({
-    template: [],
-    setTemplate: (template) => set((temp) => ({
-        template: { ...temp.template, ...template }
-    })),
-}))
-
-export const useCsvStore = create((set) => ({
-    csv: [],
-    setCsv: (data) => set({
-        csv: data
+export const useTemplateStore = create(
+  persist(
+    (set) => ({
+      template: [],
+      setTemplate: (template) => set((temp) => ({ template: { ...temp.template, ...template } })),
     }),
-    addCsv: (csv) => set((state) => ({
-        csv: [...state.csv, csv]
-    })),
-}))
+    {
+      name: 'template',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
 
+export const useCsvStore = create(
+  persist(
+    (set) => ({
+      csv: [],
+      setCsv: (data) => set({ csv: data }),
+      addCsv: (csv) => set((state) => ({ csv: [...state.csv, csv] })),
+    }),
+    {
+      name: 'csv',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
