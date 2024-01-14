@@ -24,26 +24,23 @@ const Events = () => {
   const [reload, setReload] = useState(false);
   const [form, setForm] = useState({})
   const { events, setEvents } = useEventsStore(state => state);
-
-  const handleActionsModal = ({ action, id = 0 }) => {
-    setActionModal({
-      ...isActionModalOpen,
-      action: action,
-      isOpen: true,
-    });
+  const handleActionsModal = async ({ action, id = 0 }) => {
     if (action === "edit") {
-      console.log("edit",id,events)
-      const event = events.find((e) => e._id === id);
-      setForm({
-        ...event,
-      });
+      console.log("edit", id, useEventsStore.getState().events)
+      const event = await events.find((e) => e._id === id);
+      setForm(event);
     } else if (action === "delete") {
-      console.log("delete",id,events)
+      console.log("delete", id, events)
       const event = events.find((e) => e._id === id);
       setForm({
         ...event,
       });
     }
+    setActionModal({
+      ...isActionModalOpen,
+      action: action,
+      isOpen: true,
+    });
   };
   const handleActionsModalClose = () => {
     setForm({});
@@ -106,7 +103,7 @@ const Events = () => {
         })
         .catch((error) => toast.error(error.data.message))
         .finally(() => setLoading(false))
-    } 
+    }
     else if (isActionModalOpen.action === "delete") {
       console.log(form)
       setLoading(true)

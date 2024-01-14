@@ -1,7 +1,7 @@
 const multer = require('multer');
 const express = require('express');
 const cors = require('cors');
-const connectDatabase = require('./config/database');
+const connectDatabase = require('./config/mongodb');
 
 //used for excel upload of data
 const storage = multer.memoryStorage();
@@ -28,8 +28,9 @@ app.use("/api/v1/user", require("./routes/auth"));
 app.use("/api/v1/org", require("./routes/organization"));
 app.use("/api/v1/template", require("./routes/template"));
 app.use("/api/v1/event", require("./routes/event"));
-app.use("/api/v1/certificate", upload, require("./routes/certificate"));
+app.use("/api/v1/csv", upload, require("./routes/csv"));
 app.use("/api/v1/dashboard", require("./routes/dashboard"));
+app.use("/api/v1/certificate", require("./routes/certificate"));
 
 app.get('/', (req, res) => {
     res.json({ message: 'Hello World!' });

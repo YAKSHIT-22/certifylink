@@ -67,7 +67,7 @@ const Profile = () => {
                     }
                   </label>
                   <span className="text-xs text-white">
-                    *upload images upto 1MB
+                    *upload images upto 10MB
                   </span>
                 </div>
               </div>

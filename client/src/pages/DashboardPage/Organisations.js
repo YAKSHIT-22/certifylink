@@ -39,7 +39,7 @@ const Organisations = () => {
       return {
         ...e,
         organizationId: e._id,
-        actions: e._id,
+        // actions: e._id,
       }
     });
     return newData;
@@ -123,7 +123,7 @@ const Organisations = () => {
           });
           setForm({});
         })
-        .catch((error) => toast.error(error.data.message))
+        .catch((error) => toast.error(error.response.data.message))
         .finally(() => setLoading(false));
     }
   };

@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
 const templateSchema = new mongoose.Schema({
-    organization: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "organization",
-    },
     templateName: {
         type: String,
         required: true
@@ -13,9 +9,9 @@ const templateSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    event: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "event",
+    templateHtml: {
+        type: String,
+        required: true
     }
 })
 const Templates = mongoose.models["template"] || mongoose.model("template", templateSchema);

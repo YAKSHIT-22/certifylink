@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import DashboardContainer from '../../components/containers/DashboardContainer'
 import { useCsvStore, useEventsStore, useOrganisationStore, useTemplateStore } from '../../store/masterStore'
 import { publicApi } from '../../utils/app.utils';
+import toast from 'react-hot-toast';
 
 const Templates = () => {
   const [form, setForm] = React.useState({});
   const { organization, setOrg } = useOrganisationStore(state => state);
   const { events, setEvents } = useEventsStore(state => state);
   const { template, setTemplate } = useTemplateStore(state => state);
+  const { csv } = useCsvStore(state => state);
   const [reload, setReload] = useState(false)
   const [loading, setLoading] = useState(false)
   useEffect(() => {
@@ -16,7 +18,6 @@ const Templates = () => {
       publicApi.get("/api/v1/template")
         .then((res) => {
           setTemplate(res.data.templates)
-          console.log(res.data.templates)
           setEvents(res.data.events)
           setOrg(res.data.organizations)
         })
@@ -26,19 +27,41 @@ const Templates = () => {
     finally {
       setLoading(false)
     }
-  }, [reload])
+    setForm({
+      ...form,
+      data: csv
+    })
+  }, [reload]);
+
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    if (!form.template) {
+      return toast.error("Select a template first!")
+    }
+    else if (!form.organizationName) {
+      return toast.error("Select an organization!")
+    }
+    else if (!form.eventName) {
+      return toast.error("Select an Event!")
+    }
     try {
       setLoading(true)
-      const { data } = await publicApi.post("/api/", { ...form })
-      console.log(data)
+      toast.loading("Sending Mail Certificates! 🚀", {
+        duration: 2000
+      })
+      await publicApi.post("/api/v1/certificate", { ...form })
+        .then((res) => {
+          setTimeout(() => {
+            toast.success(`${res.data.message}! 🔥`)
+          }, 3000);
+          setReload(!reload)
+          setForm({})
+        })
     } catch (error) {
       console.log(error)
     }
@@ -77,8 +100,8 @@ const Templates = () => {
             </div>
 
             <div className='flex items-center justify-center'>
-              <button onClick={()=>handleSubmit} type="button" className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2">
-                <p className='text-white font-medium'>{(form.temp) ? "Send" : "Select Template First"}</p>
+              <button onClick={() => handleSubmit()} disabled={loading} type="button" className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2">
+                <p className='text-white font-medium'>{(form.template) ? "Send" : "Select Template First"}</p>
               </button>
             </div>
           </div>
@@ -90,14 +113,17 @@ const Templates = () => {
               template.map((temp) => (
                 <div key={temp._id} onClick={() => {
                   setForm(
-                    { ...temp }
+                    { ...form, template: temp._id }
                   )
                 }} className="flex items-center relative justify-center w-full h-full flex-col gap-3">
                   <div className="flex w-full h-full items-center justify-center">
-                    <img src={temp.templateImage} alt={temp.templateName} className="w-full h-full lg:h-full xl:h-60 xl:object-cover xl:object-center object-contain rounded-md" />
+                    <img src={temp.templateImage} alt={temp.templateName} className="w-full h-full lg:h-full xl:h-60  xl:object-center object-contain xl:object-fill rounded-md" />
                   </div>
                   <div className="absolute right-3 top-2 flex items-center justify-center">
                     <p className='text-black font-bold'>{temp.templateName}</p>
+                  </div>
+                  <div className="absolute left-3 bottom-2 flex items-center justify-center">
+                    <p className='text-xs rounded-md px-4 py-1 bg-primary text-white font-bold transition-all duration-200'>{form.temp && (form.temp.templateName === temp.templateName ? "Selected" : "")}</p>
                   </div>
                 </div>
               )

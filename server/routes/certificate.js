@@ -1,9 +1,9 @@
 const express = require("express");
 const { verifyAuth } = require("../middleware/auth.js");
-const { createCertificate, getCertificates } = require("../controllers/certificate.js");
+const { sendCertificates } = require("../controllers/certificates.js");
 const authRouter = express.Router();
 
-authRouter.post("/", verifyAuth, createCertificate);
-authRouter.get("/", verifyAuth, getCertificates);
+authRouter.post("/", verifyAuth, sendCertificates);
+// authRouter.get("/", verifyAuth, getCertificates);
 
 module.exports = authRouter;

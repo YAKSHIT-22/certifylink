@@ -15,7 +15,7 @@ const columns = [
   { name: "Student Mobile", uid: "studentMobile" },
   { name: "Student Roll", uid: "studentRoll" },
   { name: "Events Name", uid: "eventsName" },
-  {name : "Student Email", uid: "studentEmail"},
+  { name: "Student Email", uid: "studentEmail" },
   { name: "Actions", uid: "actions" },
 ];
 
@@ -29,7 +29,7 @@ const Certificates = () => {
   const { csv, setCsv } = useCsvStore();
   useEffect(() => {
     setLoading(true)
-    publicApi.get("/api/v1/certificate")
+    publicApi.get("/api/v1/csv")
       .then((res) => {
         setCsv(res.data.data)
         setLoading(false)
@@ -38,7 +38,7 @@ const Certificates = () => {
   }, [reload])
 
   const data = React.useMemo(() => {
-    return csv.map(e => {
+    const newData = csv.map(e => {
       return {
         ...e,
         certificateId: e._id,
@@ -49,6 +49,7 @@ const Certificates = () => {
         studentEmail: e.studentEmail
       }
     })
+    return newData;
   }, [csv])
 
   const handleSubmit = (e) => {
@@ -95,7 +96,7 @@ const Certificates = () => {
     setLoading(true)
     const formData = new FormData();
     formData.append('excelData', csvUpload.file);
-    await publicApi.post("/api/v1/certificate", formData, {
+    await publicApi.post("/api/v1/csv", formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -147,7 +148,7 @@ const Certificates = () => {
       case "studentEmail":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+            <p className="text-bold text-sm ">{cellValue}</p>
           </div>
         );
 
@@ -341,7 +342,7 @@ const Certificates = () => {
                     className="flex bg-transparent text-sm w-full pl-10 pr-3 py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
                     placeholder="Event Name"
                     onChange={handleInputChange}
-                    value={form.eventName || ""}
+                    value={form.eventsName || ""}
                     name="eventName"
                     required
                   />

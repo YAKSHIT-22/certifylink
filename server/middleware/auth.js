@@ -16,6 +16,7 @@ const verifyAuth = async (req, res, next) => {
         }
 
         req.user = verify.id;
+        req.email = verify.email
         req.token = token;
         next();
     } catch (err) {

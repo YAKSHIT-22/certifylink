@@ -11,23 +11,6 @@ const createCertificate = async (req, res) => {
     const jsonData = xlsx.utils.sheet_to_json(sheet);
     var arrayToInsert = [];
     for (var i = 0; i < jsonData.length; i++) {
-
-        // donot delete this
-        // const existingdata = await excelSchema.find({
-        //     eventsName: jsonData[i]["Event"],
-        //     // studentEmail: jsonData[i]["Email"],
-        //     // createdBy: req.user
-        // })
-        // if (!existingdata) {
-        //     var oneRow = {
-        //         studentName: jsonData[i]["Name"],
-        //         studentMobile: jsonData[i]["Mobile"],
-        //         studentRoll: jsonData[i]["Roll No"],
-        //         eventsName: jsonData[i]["Event"],
-        //         studentEmail: jsonData[i]["Email"]
-        //     }
-        //     arrayToInsert.push(oneRow);
-        // }
         var oneRow = {
             studentName: jsonData[i]["Name"],
             studentMobile: jsonData[i]["Mobile"],
@@ -39,7 +22,10 @@ const createCertificate = async (req, res) => {
         arrayToInsert.push(oneRow);
     }
     try {
-        ExcelData.insertMany(arrayToInsert);
+        await ExcelData.deleteMany({
+            createdBy: req.user
+        })
+        await ExcelData.insertMany(arrayToInsert);
         return res.status(200).json({ message: 'Data saved successfully.' });
     } catch (error) {
         res.status(500).json({ message: 'Error saving data to Database.' });
