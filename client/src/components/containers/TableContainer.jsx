@@ -23,7 +23,7 @@ const TableContainer = ({ aria, columns, data, id, renderCell }) => {
       </TableHeader>
       <TableBody items={data}>
         {(item) => (
-          <TableRow key={item[id]}>
+          <TableRow className='border-b border-[#252525]' key={item[id]}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}

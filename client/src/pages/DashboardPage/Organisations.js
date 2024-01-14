@@ -47,8 +47,8 @@ const Organisations = () => {
 
   const handleActionsModal = ({ action, id = 0 }) => {
     if (action === "edit") {
+      console.log(organization)
       const org = organization.find((e) => e._id === id);
-      console.log(org)
       setForm({
         ...org,
       });

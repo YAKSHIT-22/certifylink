@@ -8,7 +8,6 @@ const Templates = () => {
   const { organization, setOrg } = useOrganisationStore(state => state);
   const { events, setEvents } = useEventsStore(state => state);
   const { template, setTemplate } = useTemplateStore(state => state);
-  const { csv } = useCsvStore(state => state);
   const [reload, setReload] = useState(false)
   const [loading, setLoading] = useState(false)
   useEffect(() => {
@@ -34,6 +33,19 @@ const Templates = () => {
       [e.target.name]: e.target.value,
     });
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true)
+      const { data } = await publicApi.post("/api/", { ...form })
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+    finally {
+      setLoading(false)
+    }
+  }
   return (
     <DashboardContainer>
       <div className="flex items-center justify-center w-full h-full px-2">
@@ -65,8 +77,8 @@ const Templates = () => {
             </div>
 
             <div className='flex items-center justify-center'>
-              <button className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2">
-                <p className='text-white font-bold'>{(form.temp && csv) ? "Create" : "Upload Csv First"}</p>
+              <button onClick={()=>handleSubmit} type="button" className="bg-[#202020] border border-[#222222] px-10 py-2 rounded-md flex items-center justify-center gap-2">
+                <p className='text-white font-medium'>{(form.temp) ? "Send" : "Select Template First"}</p>
               </button>
             </div>
           </div>

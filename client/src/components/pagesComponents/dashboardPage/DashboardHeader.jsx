@@ -39,14 +39,14 @@ const DashboardHeader = () => {
                 link={"/dashboard/events"}
               />
               <DashboardLinks
-                text={"Templates"}
-                icon={<GoProjectTemplate className="w-6 h-6" />}
-                link={"/dashboard/templates"}
-              />
-              <DashboardLinks
                 text={"Certificates"}
                 icon={<GrCertificate className="w-6 h-6" />}
                 link={"/dashboard/certificates"}
+              />
+              <DashboardLinks
+                text={"Templates"}
+                icon={<GoProjectTemplate className="w-6 h-6" />}
+                link={"/dashboard/templates"}
               />
             </div>
             <div className="flex items-center justify-center w-full">
