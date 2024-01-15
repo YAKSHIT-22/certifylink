@@ -24,13 +24,11 @@ const Events = () => {
   const [reload, setReload] = useState(false);
   const [form, setForm] = useState({})
   const { events, setEvents } = useEventsStore(state => state);
-  const handleActionsModal = async ({ action, id = 0 }) => {
+  async function handleActionsModal({ action, id = 0 }) {
     if (action === "edit") {
-      console.log("edit", id, useEventsStore.getState().events)
       const event = await events.find((e) => e._id === id);
       setForm(event);
     } else if (action === "delete") {
-      console.log("delete", id, events)
       const event = events.find((e) => e._id === id);
       setForm({
         ...event,
@@ -71,7 +69,7 @@ const Events = () => {
     if (isActionModalOpen.action === "edit") {
       e.preventDefault();
       setLoading(true)
-      await publicApi.put(`/api/v1/events/${form._id}`, form)
+      await publicApi.put(`/api/v1/event/${form._id}`, form)
         .then((res) => {
           toast.success(res.data.message)
           e.target.reset();

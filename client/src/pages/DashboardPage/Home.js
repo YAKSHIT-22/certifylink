@@ -8,9 +8,9 @@ import { publicApi } from "../../utils/app.utils";
 const Home = () => {
   const user = useAuthStore(state => state.user)
   const [data, setData] = React.useState({
-    events: 0,
-    org: 0,
-    templates: 0
+    events: [],
+    org: [],
+    templates: []
   });
   const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
@@ -28,7 +28,6 @@ const Home = () => {
         setLoading(false)
       })
   }, []);
-  console.log(data)
   return (
     <DashboardContainer>
       <div className="flex items-center justify-center w-full h-full px-2">

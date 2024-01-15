@@ -1,7 +1,6 @@
 import React from "react";
 
 const AnalyticCard = ({ heading, data = [], type = "" }) => {
-  console.log(data)
   return (
     <div className="w-full flex items-start relative h-full justify-center bg-[#181818] border border-[#222222] rounded-md text-white p-4">
       <div className="flex w-full items-center justify-center gap-2 flex-col px-2">

@@ -3,15 +3,22 @@ import DashboardHeader from "../pagesComponents/dashboardPage/DashboardHeader";
 import DashboardNav from "../pagesComponents/dashboardPage/DashboardNav";
 import { useAuthStore } from "../../store/masterStore";
 import { useNavigate } from "react-router";
+import { publicApi } from "../../utils/app.utils";
 
 const DashboardContainer = ({ children }) => {
-  const user = useAuthStore(state => state.user)
+  const { user, setUser } = useAuthStore(state => state)
   const navigate = useNavigate();
   useEffect(() => {
     if (!user) {
       return navigate("/login");
     }
-  }, [user, navigate])
+    else {
+      publicApi.get(`/api/v1/user`)
+        .then((res) => {
+          setUser(res.data)
+        })
+    }
+  }, [])
   return (
     <main className="flex items-start justify-start w-full min-h-[100dvh] h-full">
       <div className="flex items-center justify-center w-full max-w-screen-2xl mx-auto min-h-[100dvh] md:py-0 pb-[8rem]">
