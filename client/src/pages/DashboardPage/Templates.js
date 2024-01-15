@@ -117,13 +117,13 @@ const Templates = () => {
                   )
                 }} className="flex items-center relative justify-center w-full h-full flex-col gap-3">
                   <div className="flex w-full h-full items-center justify-center">
-                    <img src={temp.templateImage} alt={temp.templateName} className="w-full h-full lg:h-full xl:h-60  xl:object-center object-contain xl:object-fill rounded-md" />
+                    <img src={temp.templateImage} alt={temp.templateName} className="w-full h-full lg:h-full xl:h-60  xl:object-center object-cover xl:object-fill rounded-md" />
                   </div>
                   <div className="absolute right-3 top-2 flex items-center justify-center">
                     <p className='text-black font-bold'>{temp.templateName}</p>
                   </div>
                   <div className="absolute left-3 bottom-2 flex items-center justify-center">
-                    <p className='text-xs rounded-md px-4 py-1 bg-primary text-white font-bold transition-all duration-200'>{form.temp && (form.temp.templateName === temp.templateName ? "Selected" : "")}</p>
+                    <p className='text-xs rounded-md px-4 py-1 bg-primary text-white font-bold transition-all duration-200'>{form.template && (form.template === temp._id ? "Selected" : "")}</p>
                   </div>
                 </div>
               )

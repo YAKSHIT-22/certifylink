@@ -67,13 +67,16 @@ const Certificates = () => {
       isOpen: true,
     });
     if (action === "edit") {
+      const csvData = csv.find((e) => e._id === id);
       setForm({
-        ...form,
-        certificateId: id,
+        ...csvData,
+        certificateId: csvData._id,
       });
     } else if (action === "delete") {
+      const csvData = csv.find((e) => e._id === id);
       setForm({
-        certificateId: id,
+        ...csvData,
+        certificateId: csvData._id,
       });
     }
   };
@@ -267,9 +270,7 @@ const Certificates = () => {
               <h1 className="capitalize text-sm font-medium">
                 {"Edit Students Details"}
               </h1>
-              <p className="capitalize text-xs text-[#b3b3b3]">
-                *all fields are required!
-              </p>
+              
             </div>
             <form
               id="editstudentdetails"
