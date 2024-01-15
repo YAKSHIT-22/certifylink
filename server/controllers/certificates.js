@@ -25,17 +25,22 @@ const sendCertificates = async (req, res) => {
     try {
       await data.map(async (item) => {
         //dom.querySelector("#eventName").textContent = eventName;
-        dom.querySelector("#organizationName").textContent= organizationName;
+        dom.querySelector("#organizationName").textContent = organizationName;
         dom.querySelector("#date").textContent = new Date().toLocaleDateString();
         dom.querySelector("#name").textContent = item.studentName;
         const newHtml = dom.toString();
-        
+
         //firebase upload
         const url = await generateAndUploadPDF(
           newHtml,
           `uploads/${item.studentRoll}_${item.eventsName}.pdf`
         );
-        await sendMail(item, organizationName, url, req.email);
+        const sent = await sendMail(item, organizationName, url, req.email);
+        if (!sent) {
+          return res.status(401).json({
+            message: "Error sending mails",
+          });
+        }
       });
     } catch (error) {
       console.log("error", error);
