@@ -55,9 +55,30 @@ const Certificates = () => {
   const handleSubmit = (e) => {
     if (isActionModalOpen.action === "edit") {
       e.preventDefault();
-      console.log("edit");
+      setLoading(true)
+      publicApi.put(`/api/v1/csv/${form.certificateId}`, form)
+        .then((res) => {
+          toast.success(res.data.message)
+          setReload(!reload)
+          handleActionsModalClose()
+        }).catch((error) => {
+          toast.error(error.response.message)
+          console.log(error)
+        })
+        .finally(() => setLoading(false))
+
     } else if (isActionModalOpen.action === "delete") {
-      console.log("delete");
+      setLoading(true)
+      publicApi.delete(`/api/v1/csv/${form.certificateId}`)
+        .then((res) => {
+          toast.success(res.data.message)
+          setReload(!reload)
+          handleActionsModalClose()
+        }).catch((error) => {
+          toast.error(error.response.message)
+          console.log(error)
+        })
+        .finally(() => setLoading(false))
     }
   };
   const handleActionsModal = ({ action, id = 0 }) => {
@@ -270,7 +291,7 @@ const Certificates = () => {
               <h1 className="capitalize text-sm font-medium">
                 {"Edit Students Details"}
               </h1>
-              
+
             </div>
             <form
               id="editstudentdetails"

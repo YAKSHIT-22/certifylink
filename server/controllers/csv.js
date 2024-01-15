@@ -1,5 +1,4 @@
 const xlsx = require('xlsx');
-const excelSchema = require('../models/excelSchema');
 const ExcelData = require('../models/excelSchema');
 const createCertificate = async (req, res) => {
     if (!req.file) {
@@ -35,7 +34,7 @@ const createCertificate = async (req, res) => {
 
 const getCertificates = async (req, res) => {
     try {
-        const data = await excelSchema.find({
+        const data = await ExcelData.find({
             createdBy: req.user
         });
         return res.status(200).json({ data });
@@ -44,7 +43,42 @@ const getCertificates = async (req, res) => {
     }
 }
 
+const updateCertificates = async (req, res) => {
+    try {
+        const { studentName, studentEmail, studentMobile, studentRoll, eventsName } = req.body
+        await ExcelData.findOneAndUpdate({
+            createdBy: req.user,
+            _id: req.params.id
+        }, {
+            $set: {
+                studentEmail,
+                studentName,
+                studentRoll,
+                studentMobile,
+                eventsName
+            }
+        }, { new: true });
+        return res.status(200).json({ message: "Data Updated successfully!" });
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+}
+
+const deleteCertificates = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await ExcelData.findByIdAndDelete(id);
+        res.status(200).json({
+            message: "Certificate Deleted",
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+}
+
 module.exports = {
     createCertificate,
-    getCertificates
+    getCertificates,
+    updateCertificates,
+    deleteCertificates
 }
