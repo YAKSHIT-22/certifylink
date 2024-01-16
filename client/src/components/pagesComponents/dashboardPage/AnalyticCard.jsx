@@ -19,7 +19,7 @@ const AnalyticCard = ({ heading, data = [], type = "" }) => {
                 <div>{index + 1}. {item.organizationName}</div>
                 <div>01</div>
               </div>
-          }) : <div className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center"> No Data found
+          }) : <div className="flex items-center justify-center"> No Data found
           </div>}
         </div>
       </div>

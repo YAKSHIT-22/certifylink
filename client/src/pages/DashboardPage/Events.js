@@ -81,7 +81,12 @@ const Events = () => {
           });
           setForm({});
         })
-        .catch((error) => toast.error(error.data.message))
+        .catch((error) => 
+        //toast.error(error.response.data.message)
+  {
+    console.log(error)
+  }
+        )
         .finally(() => setLoading(false))
     }
     else if (isActionModalOpen.action === "add") {
@@ -99,7 +104,7 @@ const Events = () => {
           });
           setForm({})
         })
-        .catch((error) => toast.error(error.data.message))
+        .catch((error) => toast.error(error.response.data.message))
         .finally(() => setLoading(false))
     }
     else if (isActionModalOpen.action === "delete") {

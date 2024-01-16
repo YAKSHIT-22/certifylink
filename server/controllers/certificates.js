@@ -21,7 +21,7 @@ const sendCertificates = async (req, res) => {
     const temp = await Templates.findOne({ _id: template });
 
     const dom = parse(temp.templateHtml)
-
+    
     try {
       await data.map(async (item) => {
         //dom.querySelector("#eventName").textContent = eventName;

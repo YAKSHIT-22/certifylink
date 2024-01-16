@@ -9,7 +9,7 @@ import { IoMdLogOut } from "react-icons/io";
 import DashboardLinks from "../../minorComponents/DashboardLinks";
 import toast from "react-hot-toast";
 import { publicApi } from "../../../utils/app.utils";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 
 const DashboardHeader = ({ clearUser = () => { } }) => {
   const router = useNavigate();
@@ -18,9 +18,9 @@ const DashboardHeader = ({ clearUser = () => { } }) => {
       <nav className="flex items-center justify-center w-full h-full md:min-h-[100dvh]">
         <div className="flex items-center justify-center w-full h-full md:min-h-[100dvh]">
           <div className="flex items-center justify-center w-full md:min-h-[100dvh] flex-col gap-4 p-2">
-            <div className="items-center md:flex hidden justify-center w-full h-full">
+            <Link to="/" className="items-center md:flex hidden justify-center w-full h-full">
               <img src={logo} alt="" className="flex w-24 h-24 object-cover" />
-            </div>
+            </Link>
             <div className="flex items-start justify-start w-full flex-row md:flex-col gap-3 p-4 h-full flex-1">
               <DashboardLinks
                 text={"Home"}

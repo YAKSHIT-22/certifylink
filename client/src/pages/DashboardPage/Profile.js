@@ -57,7 +57,7 @@ const Profile = () => {
               <div className="flex items-center justify-between w-full">
                 <h3 className="text-sm font-normal text-white">My Profile</h3>
                 <div className="flex flex-col gap-2">
-                  <label className="py-1 px-4 bg-[#181818] border-[#222222] text-sm text-white rounded-md">
+                  <label className="py-1 px-4 flex items-center justify-center bg-[#181818] border-[#222222] text-sm text-white rounded-md">
                     {!form.img &&
                       "Upload Image"
                     }

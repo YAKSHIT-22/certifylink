@@ -118,7 +118,6 @@ const updateUser = async (req, res) => {
                 details = await cloudinary.uploader.upload(img,
                     {
                         folder: "CertifyLinkProfiles",
-
                     })
             } catch (error) {
                 console.log(error)
