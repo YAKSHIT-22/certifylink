@@ -13,7 +13,7 @@ const port = 4000;
 app.use(cors({
     origin: [
         "http://localhost:3000",
-        "https://certifylink-frontend.vercel.app/",
+        "https://certifylink-frontend.vercel.app",
     ],
     credentials: true
 }));
