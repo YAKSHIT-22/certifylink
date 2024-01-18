@@ -81,7 +81,7 @@ const loginUser = async (req, res) => {
                 maxAge: 1000 * 60 * 60 * 24 * 30, httpOnly: true
             }
 
-            res.cookie("x-auth-token", token, option).status(200).json({
+            res.cookie("auth-token", token, option).status(200).json({
                 success: true,
                 token, user, message: "User Logged In Successfully"
             })
@@ -146,7 +146,9 @@ const updateUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
     try {
-        res.clearCookie('x-auth-token');
+        res.clearCookie('auth-token',{
+            httpOnly:true
+        });
         return res.status(200).json("Logged Out")
     } catch (error) {
         console.log(error)
