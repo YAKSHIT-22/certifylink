@@ -3,7 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import login from "../../assets/login.svg";
 import { useAuthStore } from "../../store/masterStore";
 import { publicApi } from "../../utils/app.utils";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import toast from "react-hot-toast";
 
 const SignUp = () => {
@@ -11,7 +11,7 @@ const SignUp = () => {
   const [form, setFormValues] = useState({});
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  let { user } = useAuthStore((state) => state);
+  let { user, token } = useAuthStore((state) => state);
   useEffect(() => {
     if (user) {
       return navigate("/dashboard/home");
@@ -20,14 +20,18 @@ const SignUp = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (e.target.password.value !== e.target.confirmPassword.value) {
-        return setError("Password and Confirm Password do not match");
-    } 
+      return setError("Password and Confirm Password do not match");
+    }
     setLoading(true);
     publicApi
       .post("/api/v1/user/signup", {
         email: e.target.email.value,
         password: e.target.password.value,
         confirmPassword: e.target.confirmPassword.value,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       })
       .then((res) => {
         toast.success("Thank you, 👋🏻");
@@ -123,7 +127,7 @@ const SignUp = () => {
                 <div className="w-full h-full flex items-center justify-center">
                   <button
                     type="submit"
-                    onClick={() => {}}
+                    onClick={() => { }}
                     className="bg-[#F3F9FA] text-[#313957] px-12 whitespace-nowrap rounded-md py-3 w-full flex items-center justify-center gap-2 text-base"
                   >
                     <FcGoogle className="w-6 h-6" />

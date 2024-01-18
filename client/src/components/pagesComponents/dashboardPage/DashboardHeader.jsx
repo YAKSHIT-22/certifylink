@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import { publicApi } from "../../../utils/app.utils";
 import { Link, useNavigate } from "react-router-dom";
 
-const DashboardHeader = ({ clearUser = () => { } }) => {
+const DashboardHeader = ({ clearUser = () => { }, clearToken = () => { }, token = "" }) => {
   const router = useNavigate();
   return (
     <header className="md:static fixed bottom-0 flex items-start justify-start w-full md:min-h-[100dvh] md:h-full bg-[#191919] z-10 border-r border-[#252525]">
@@ -50,8 +50,13 @@ const DashboardHeader = ({ clearUser = () => { } }) => {
             </div>
             <div className="flex items-center justify-center w-full">
               <button onClick={async () => {
-                await publicApi.get("/api/v1/user/signout");
+                await publicApi.get("/api/v1/user/signout", {
+                  headers: {
+                    Authorization: `Bearer ${token}`
+                  }
+                });
                 clearUser();
+                clearToken();
                 router("/login");
                 toast.success("Logged out!");
               }} className="text-lg font-semibold flex items-center justify-center gap-2 text-red-600">

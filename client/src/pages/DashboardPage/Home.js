@@ -6,7 +6,7 @@ import { useAuthStore } from "../../store/masterStore";
 import { publicApi } from "../../utils/app.utils";
 
 const Home = () => {
-  const user = useAuthStore(state => state.user)
+  const { user, token } = useAuthStore(state => state)
   const [data, setData] = React.useState({
     events: [],
     org: [],
@@ -15,7 +15,11 @@ const Home = () => {
   const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
     setLoading(true);
-    publicApi.get("/api/v1/dashboard")
+    publicApi.get("/api/v1/dashboard", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((res) => {
         setData({
           events: res.data.events,

@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 const Profile = () => {
   const [form, setForm] = useState({})
   const [loading, setLoading] = useState(false);
-  let { user, setUser } = useAuthStore(state => state);
+  let { user, setUser, token } = useAuthStore(state => state);
   useEffect(() => {
     setForm({
       name: user?.name,
@@ -37,7 +37,11 @@ const Profile = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    publicApi.put("/api/v1/user/update", form)
+    publicApi.put("/api/v1/user/update", form, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((res) => {
         setUser(res.data.user);
         setForm({ ...form, img: undefined })

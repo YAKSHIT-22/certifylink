@@ -5,7 +5,7 @@ import ModalContainer from "../../components/containers/ModalContainer";
 import { Tooltip } from "@nextui-org/react";
 import icon from "../../components/svgExporter";
 import { publicApi } from "../../utils/app.utils";
-import { useOrganisationStore } from "../../store/masterStore";
+import { useAuthStore, useOrganisationStore } from "../../store/masterStore";
 import toast from "react-hot-toast";
 
 const columns = [
@@ -23,10 +23,15 @@ const Organisations = () => {
   const [reload, setReload] = useState(false);
   const [form, setForm] = useState({});
   const { organization, setOrg } = useOrganisationStore(state => state);
+  const token = useAuthStore(state => state.token);
   useEffect(() => {
     setLoading(true);
     publicApi
-      .get("/api/v1/org")
+      .get("/api/v1/org", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then((res) => {
         setOrg(res.data.data);
         setLoading(false);
@@ -78,7 +83,11 @@ const Organisations = () => {
       e.preventDefault();
       setLoading(true);
       await publicApi
-        .put(`/api/v1/org/${form._id}`, form)
+        .put(`/api/v1/org/${form._id}`, form, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then((res) => {
           toast.success(res.data.message);
           setReload(!reload);
@@ -95,7 +104,11 @@ const Organisations = () => {
       e.preventDefault();
       setLoading(true);
       await publicApi
-        .post("/api/v1/org", form)
+        .post("/api/v1/org", form, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then((res) => {
           toast.success(res.data.message);
           setOrg(res.data.data);
@@ -112,7 +125,11 @@ const Organisations = () => {
     } else if (isActionModalOpen.action === "delete") {
       setLoading(true);
       await publicApi
-        .delete(`/api/v1/org/${form._id}`)
+        .delete(`/api/v1/org/${form._id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then((res) => {
           toast.success(res.data.message);
           setReload(!reload);

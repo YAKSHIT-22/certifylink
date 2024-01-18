@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import DashboardContainer from '../../components/containers/DashboardContainer'
-import { useCsvStore, useEventsStore, useOrganisationStore, useTemplateStore } from '../../store/masterStore'
+import { useAuthStore, useCsvStore, useEventsStore, useOrganisationStore, useTemplateStore } from '../../store/masterStore'
 import { publicApi } from '../../utils/app.utils';
 import toast from 'react-hot-toast';
 
 const Templates = () => {
+  const token = useAuthStore(state => state.token)
   const [form, setForm] = React.useState({});
   const { organization, setOrg } = useOrganisationStore(state => state);
   const { events, setEvents } = useEventsStore(state => state);
@@ -15,7 +16,11 @@ const Templates = () => {
   useEffect(() => {
     try {
       setLoading(true)
-      publicApi.get("/api/v1/template")
+      publicApi.get("/api/v1/template", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then((res) => {
           setTemplate(res.data.templates)
           setEvents(res.data.events)
@@ -54,7 +59,11 @@ const Templates = () => {
       toast.loading("Sending Mail Certificates! 🚀", {
         duration: 2000
       })
-      await publicApi.post("/api/v1/certificate", { ...form })
+      await publicApi.post("/api/v1/certificate", { ...form }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then((res) => {
           setTimeout(() => {
             toast.success(`${res.data.message}! 🔥`)

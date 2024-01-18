@@ -6,7 +6,7 @@ import { Tooltip } from "@nextui-org/react";
 import icon from "../../components/svgExporter";
 import { publicApi } from "../../utils/app.utils";
 import toast from "react-hot-toast";
-import { useEventsStore } from "../../store/masterStore";
+import { useAuthStore, useEventsStore } from "../../store/masterStore";
 
 
 const columns = [
@@ -24,6 +24,7 @@ const Events = () => {
   const [reload, setReload] = useState(false);
   const [form, setForm] = useState({})
   const { events, setEvents } = useEventsStore(state => state);
+  const token = useAuthStore(state => state.token)
   async function handleActionsModal({ action, id = 0 }) {
     if (action === "edit") {
       const event = await events.find((e) => e._id === id);
@@ -50,7 +51,11 @@ const Events = () => {
   };
   useEffect(() => {
     setLoading(true)
-    publicApi.get("/api/v1/event")
+    publicApi.get("/api/v1/event", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((res) => {
         setEvents(res.data.data)
         setLoading(false)
@@ -69,7 +74,11 @@ const Events = () => {
     if (isActionModalOpen.action === "edit") {
       e.preventDefault();
       setLoading(true)
-      await publicApi.put(`/api/v1/event/${form._id}`, form)
+      await publicApi.put(`/api/v1/event/${form._id}`, form, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then((res) => {
           toast.success(res.data.message)
           e.target.reset();
@@ -81,18 +90,22 @@ const Events = () => {
           });
           setForm({});
         })
-        .catch((error) => 
+        .catch((error) =>
         //toast.error(error.response.data.message)
-  {
-    console.log(error)
-  }
+        {
+          console.log(error)
+        }
         )
         .finally(() => setLoading(false))
     }
     else if (isActionModalOpen.action === "add") {
       e.preventDefault();
       setLoading(true)
-      await publicApi.post("/api/v1/event", form)
+      await publicApi.post("/api/v1/event", form, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then((res) => {
           toast.success(res.data.message)
           setEvents(res.data.data)
@@ -110,7 +123,11 @@ const Events = () => {
     else if (isActionModalOpen.action === "delete") {
       console.log(form)
       setLoading(true)
-      await publicApi.delete(`/api/v1/event/${form._id}`)
+      await publicApi.delete(`/api/v1/event/${form._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then((res) => {
           toast.success(res.data.message)
           setReload(!reload)

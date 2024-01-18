@@ -6,7 +6,7 @@ import { Tooltip } from "@nextui-org/react";
 import icon from "../../components/svgExporter";
 import { publicApi } from "../../utils/app.utils";
 import toast from "react-hot-toast";
-import { useCsvStore } from "../../store/masterStore";
+import { useAuthStore, useCsvStore } from "../../store/masterStore";
 
 
 const columns = [
@@ -22,6 +22,7 @@ const columns = [
 
 const Certificates = () => {
   const [isActionModalOpen, setActionModal] = useState({});
+  const token = useAuthStore(state => state.token)
   const [form, setForm] = useState({});
   const [csvUpload, setCsvUpload] = useState({});
   const [reload, setReload] = useState(false)
@@ -29,7 +30,11 @@ const Certificates = () => {
   const { csv, setCsv } = useCsvStore();
   useEffect(() => {
     setLoading(true)
-    publicApi.get("/api/v1/csv")
+    publicApi.get("/api/v1/csv", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((res) => {
         setCsv(res.data.data)
         setLoading(false)
@@ -56,7 +61,11 @@ const Certificates = () => {
     if (isActionModalOpen.action === "edit") {
       e.preventDefault();
       setLoading(true)
-      publicApi.put(`/api/v1/csv/${form.certificateId}`, form)
+      publicApi.put(`/api/v1/csv/${form.certificateId}`, form, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then((res) => {
           toast.success(res.data.message)
           setReload(!reload)
@@ -69,7 +78,11 @@ const Certificates = () => {
 
     } else if (isActionModalOpen.action === "delete") {
       setLoading(true)
-      publicApi.delete(`/api/v1/csv/${form.certificateId}`)
+      publicApi.delete(`/api/v1/csv/${form.certificateId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then((res) => {
           toast.success(res.data.message)
           setReload(!reload)
@@ -123,6 +136,7 @@ const Certificates = () => {
     await publicApi.post("/api/v1/csv", formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `Beared ${token}`
       },
     })
       .then((res) => {

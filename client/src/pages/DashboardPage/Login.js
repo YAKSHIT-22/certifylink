@@ -10,7 +10,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate()
-  let { user, setUser } = useAuthStore(state => state);
+  let { user, setUser, setToken} = useAuthStore(state => state);
   useEffect(() => {
     if (user) {
       return navigate("/dashboard/home")
@@ -24,6 +24,7 @@ const Login = () => {
       password: e.target.password.value,
     }).then((res) => {
       setUser(res.data.user);
+      setToken(res.data.token);
       toast.success("Welcome Back, 👋🏻");
       e.target.reset();
       return navigate("/dashboard/home");
