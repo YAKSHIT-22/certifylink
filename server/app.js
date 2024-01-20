@@ -16,8 +16,8 @@ app.use(cors({
         "https://certifylink-frontend.vercel.app",
     ],
     credentials: true,
-    sameSite: process.env.ENVIRONMENT === 'LIVE' ? 'none' : 'lax',
-    secure: process.env.ENVIRONMENT === 'LIVE',
+    // sameSite: process.env.ENVIRONMENT === 'LIVE' ? 'none' : 'lax',
+    // secure: process.env.ENVIRONMENT === 'LIVE',
 }));
 app.use(express.urlencoded({ extended: true }));
 app.use(require("cookie-parser")());
