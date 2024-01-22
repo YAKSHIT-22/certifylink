@@ -8,19 +8,24 @@ import { publicApi } from "../../utils/app.utils";
 const DashboardContainer = ({ children }) => {
   const { user, setUser, clearUser, clearToken, token } = useAuthStore(state => state)
   const navigate = useNavigate();
+  const checkAuth = async () => {
+    publicApi.get("/api/v1/user", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then((res) => {
+      if (res.data) {
+        setUser(res.data);
+      }
+    }).catch((err) => {
+      clearUser();
+      return navigate("/login");
+    })
+  }
   useEffect(() => {
+    checkAuth();
     if (!user) {
       return navigate("/login");
-    }
-    else {
-      publicApi.get(`/api/v1/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then((res) => {
-          setUser(res.data)
-        })
     }
   }, [clearUser])
   return (
