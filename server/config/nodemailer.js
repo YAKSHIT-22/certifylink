@@ -1,21 +1,19 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  // host: "smtp.gmail.com",
-  // port: 587,
-  // secure: false,
-  auth: {
-    user: process.env.MAIL_ID,
-    pass: process.env.MAIL_PASSWORD,
-  },
-  debug: true,
-});
-
-
-
 const sendMail = async (studentData, org, attachmentUrl, fromMail) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    // host: "smtp.gmail.com",
+    // port: 587,
+    // secure: false,
+    auth: {
+      user: process.env.MAIL_ID,
+      pass: process.env.MAIL_PASSWORD,
+    },
+    debug: true,
+  });
+
   await new Promise((resolve, reject) => {
     // verify connection configuration
     transporter.verify(function (error, success) {
