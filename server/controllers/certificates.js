@@ -1,10 +1,8 @@
 const { default: mongoose } = require("mongoose");
-const sendMail = require("../config/nodemailer");
 const Certificates = require("../models/certificateSchema");
 const Events = require("../models/eventSchema");
-const Templates = require("../models/templateSchema");
-const generateAndUploadPDF = require("../utils/firebase_upload");
-const { parse } = require("node-html-parser");
+const generateAndMail = require("../utils/generateAndMail");
+
 
 const sendCertificates = async (req, res) => {
   const { template, eventName, organizationName, data } = req.body;
@@ -31,7 +29,6 @@ const sendCertificates = async (req, res) => {
                   },
                   {
                     $project: {
-                      _id: 1,
                       organizationName: 1,
                       email: 1,
                       mobile: 1,
@@ -70,6 +67,31 @@ const sendCertificates = async (req, res) => {
               },
             },
           ],
+          template: [
+            {
+              $match: {
+                business: "",
+              },
+            },
+            {
+              $unionWith: {
+                coll: "templates",
+                pipeline: [
+                  {
+                    $match: {
+                      _id: new mongoose.Types.ObjectId(template),
+                    },
+                  },
+                  {
+                    $project: {
+                      templateHtml: 1,
+                      templateName: 1,
+                    },
+                  },
+                ],
+              },
+            },
+          ]
         },
       },
       {
@@ -78,6 +100,7 @@ const sendCertificates = async (req, res) => {
             $ifNull: [{ $arrayElemAt: ["$organizations", 0] }, 0],
           },
           events: { $ifNull: [{ $arrayElemAt: ["$events", 0] }, 0] },
+          template: { $ifNull: [{ $arrayElemAt: ["$template", 0] }, 0] }
         },
       },
     ]);
@@ -91,45 +114,19 @@ const sendCertificates = async (req, res) => {
         message: "Provide atleast one email",
       });
     }
-    const temp = await Templates.findOne({ _id: template });
-
-    const dom = parse(temp.templateHtml);
 
     let majorDetails = details[0];
-    try {
-      await data.map(async (item) => {
-        //dom.querySelector("#eventName").textContent = eventName;
-        // dom.querySelector("#organizationName").textContent = organizationName;
-        // // dom.querySelector("#date").textContent = majorDetails.events.startDate === majorDetails.events.endDate
-        // //   ? majorDetails.events.endDate
-        // //   : `${majorDetails.events.startDate} to ${majorDetails.events.endDate}`;
-        // dom.querySelector("#name").textContent = item.studentName;
-        // const newHtml = dom.toString();
+    const temp = majorDetails.template;
 
-        //firebase upload
-        // const url = await generateAndUploadPDF(
-        //   newHtml,
-        //   `${item.studentRoll}_${item.eventsName}.pdf`
-        // );
-        let url = "https://storage.googleapis.com/certifylink.appspot.com/2110991055_la.pdf?GoogleAccessId=firebase-adminsdk-bs7ic%40certifylink.iam.gserviceaccount.com&Expires=1741458600&Signature=QqEJGrVIJozHuO4dtodjtqHxvW0%2BaFKj5bJOP7dvf%2BV1mAD161QHZaMZCngX3aaAK%2FyM1rm48Ngp82UftN8jpocjl2gcDZmnZYGLhxbD8R6uwnQ9iED3FGGLkeWsGt59Qj67J%2FQ81s0Vj6JK7dzHm1BEgQVkKsi2P9Jr4KJ3Ek5dsR1p6e8OKHI4JE7PV0KUjD1yK0U%2BujYm2F3adMQzwUATvDWg7hhVNZ9UqFyH4WpvCviwz03R4%2FLeQQsV2L%2Bm4G%2Fkr0rQVwThh%2BM3UOY%2F7qsggMabqJYGcIBXUN4bEmcnFmMXaIN0Dq000YVKV0UgaRbj5%2B%2FfJq3J2bPOwHyPjQ%3D%3D"
-        const sent = await sendMail(
-          item,
-          majorDetails.organizations,
-          url,
-          req.email
-        );
-        if (!sent) {
-          return res.status(401).json({
-            message: "Error sending mails",
-          });
-        }
-      });
-    } catch (error) {
-      console.log("error", error);
+
+    // function to generate certificate upload on firebase and send mail
+    const sent = generateAndMail(data, temp, majorDetails, eventName, organizationName, req.email)
+    if (!sent) {
       return res.status(401).json({
         message: "Error sending mails",
       });
     }
+
     await Certificates.create({
       template,
       eventName,

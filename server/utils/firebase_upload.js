@@ -1,6 +1,7 @@
 const admin = require('firebase-admin');
 const serviceAccount = require('../certifylink-firebase-adminsdk-bs7ic-dbfb985cfd.json');
 const pdf = require('html-pdf');
+const puppeteer = require('puppeteer')
 
 //initialize the app
 admin.initializeApp({
@@ -14,17 +15,17 @@ var bucket = admin.storage().bucket();
 const generateAndUploadPDF = async (htmlContent, remoteFileName) => {
     //puppeter
 
-    // const browser = await puppeteer.launch();
-    // const page = await browser.newPage();
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-    // // Set content to the HTML provided
-    // await page.setContent(htmlContent, { waitUntil: 'load' });
+    // Set content to the HTML provided
+    await page.setContent(htmlContent, { waitUntil: 'load' });
 
-    // // Generate PDF from the HTML
-    // const pdfBuffer = await page.pdf();
+    // Generate PDF from the HTML
+    const pdfBuffer = await page.pdf({ landscape: true });
 
-    // // Close the browser
-    // await browser.close();
+    // Close the browser
+    await browser.close();
 
 
 
@@ -45,12 +46,12 @@ const generateAndUploadPDF = async (htmlContent, remoteFileName) => {
 
     // Create a PDF from HTML content
 
-    const pdfBuffer = await new Promise((resolve, reject) => {
-        pdf.create(htmlContent, { format: 'Letter', orientation: 'landscape' }).toBuffer((err, buffer) => {
-            if (err) reject(err);
-            else resolve(buffer);
-        });
-    });
+    // const pdfBuffer = await new Promise((resolve, reject) => {
+    //     pdf.create(htmlContent, { format: 'Letter', orientation: 'landscape' }).toBuffer((err, buffer) => {
+    //         if (err) reject(err);
+    //         else resolve(buffer);
+    //     });
+    // });
     // // Upload the PDF to Firebase Storage
     const file = bucket.file(remoteFileName);
 
