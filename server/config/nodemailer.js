@@ -1,12 +1,9 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
-const sendMail = async (studentData, org, attachmentUrl, fromMail) => {
+const sendMail = async (studentData, org, attachmentUrl) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
-    // host: "smtp.gmail.com",
-    // port: 587,
-    // secure: false,
     auth: {
       user: process.env.MAIL_ID,
       pass: process.env.MAIL_PASSWORD,
@@ -94,18 +91,18 @@ Certificate Details:
 <p>
 Please find the attached certificate along with this email. If you have any questions or need further assistance, feel free to reach out to us .
 </p>
-<a href="https://wa.me/${org.mobile}"
-                            target="_blank"
-                            rel="noopener noreferrer" class="button">Whatsapp Us</a>
+
 <div class="contact-info">
                                 <p>Once again, thank you for being a part of ${studentData.eventsName}. We look forward to your continued participation in future events.</p>
                             </div>
-                            <p>Best Regards,<br>${org.organizationName}</p>
-                            <p>${org.email}</p>
+                            <p>Best Regards,<br>org</p>
+                            <p>email</p>
                         </div>
                     </body>
                     </html>
 `,
+      // <p>Best Regards,<br>${org.organizationName}</p>
+
       attachments: [
         {
           filename: `Certificate-${studentData.studentName}.pdf`,
@@ -124,3 +121,7 @@ Please find the attached certificate along with this email. If you have any ques
 };
 
 module.exports = sendMail;
+
+{/* <a href="https://wa.me/${org.mobile}"
+                            target="_blank"
+                            rel="noopener noreferrer" class="button">Whatsapp Us</a> */}
