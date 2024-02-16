@@ -16,16 +16,21 @@ const generateAndUploadPDF = async (htmlContent, remoteFileName) => {
     //puppeter
 
     const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+    try {
+        const page = await browser.newPage();
+        let pdfBuffer;
+        // Set content to the HTML provided
+        await page.setContent(htmlContent, { waitUntil: 'load' });
 
-    // Set content to the HTML provided
-    await page.setContent(htmlContent, { waitUntil: 'load' });
+        // Generate PDF from the HTML
+        pdfBuffer = await page.pdf({ landscape: true });
 
-    // Generate PDF from the HTML
-    const pdfBuffer = await page.pdf({ landscape: true });
-
-    // Close the browser
-    await browser.close();
+        // Close the browser
+    } catch (error) {
+        console.error(error);
+    } finally {
+        await browser.close();
+    }
 
 
 
