@@ -2,6 +2,7 @@ const admin = require('firebase-admin');
 const serviceAccount = require('../certifylink-firebase-adminsdk-bs7ic-dbfb985cfd.json');
 const pdf = require('html-pdf');
 const puppeteer = require('puppeteer')
+require('dotenv').config();
 
 //initialize the app
 admin.initializeApp({
@@ -15,7 +16,18 @@ var bucket = admin.storage().bucket();
 const generateAndUploadPDF = async (htmlContent, remoteFileName) => {
     //puppeter
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        args: [
+            "--disable-setuid-sandbox",
+            "--no-sandbox",
+            "--single-process",
+            "--no-zygote",
+        ],
+        executablePath:
+            process.env.NODE_ENV === "production"
+                ? process.env.PUPPETEER_EXECUTABLE_PATH
+                : puppeteer.executablePath(),
+    });
     try {
         const page = await browser.newPage();
         let pdfBuffer;
