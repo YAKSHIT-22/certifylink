@@ -27,10 +27,10 @@ const generateAndUploadPDF = async (htmlContent, remoteFileName) => {
             process.env.NODE_ENV === "production"
                 ? process.env.PUPPETEER_EXECUTABLE_PATH
                 : puppeteer.executablePath(),
-    });
+            });
+    let pdfBuffer;
     try {
         const page = await browser.newPage();
-        let pdfBuffer;
         // Set content to the HTML provided
         await page.setContent(htmlContent, { waitUntil: 'load' });
 
