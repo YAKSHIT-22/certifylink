@@ -7,11 +7,11 @@ const generateAndMail = async (data, temp, majorDetails, eventName, organization
         const dom = parse(temp.templateHtml);
 
         dom.querySelector("#name").textContent = item.studentName;
-        // dom.querySelector("#eventName").textContent = eventName;
-        // dom.querySelector("#organizationName").textContent = organizationName;
-        // dom.querySelector("#date").textContent = majorDetails.events.startDate === majorDetails.events.endDate
-        // ? majorDetails.events.endDate
-        // : `${majorDetails.events.startDate} to ${majorDetails.events.endDate}`;
+        dom.querySelector("#eventName").textContent = eventName;
+        dom.querySelector("#organizationName").textContent = organizationName;
+        dom.querySelector("#date").textContent = majorDetails.events.startDate === majorDetails.events.endDate
+        ? majorDetails.events.endDate
+        : `${majorDetails.events.startDate} to ${majorDetails.events.endDate}`;
         const newHtml = dom.toString();
 
         // Firebase upload
