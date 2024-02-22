@@ -95,8 +95,8 @@ Please find the attached certificate along with this email. If you have any ques
 <div class="contact-info">
                                 <p>Once again, thank you for being a part of ${studentData.eventsName}. We look forward to your continued participation in future events.</p>
                             </div>
-                            <p>Best Regards,<br>org</p>
-                            <p>email</p>
+                            <p>Best Regards,<br>${org.organizationName}</p>
+                            <p>${org.email}</p>
                         </div>
                     </body>
                     </html>

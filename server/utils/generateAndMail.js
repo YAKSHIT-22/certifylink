@@ -2,7 +2,7 @@ const generateAndUploadPDF = require("../utils/firebase_upload");
 const { parse } = require("node-html-parser");
 const sendMail = require("../config/nodemailer");
 
-const generateAndMail = async (data, temp, majorDetails, eventName, organizationName, email) => {
+const generateAndMail = async (data, temp, majorDetails, eventName, organizationName) => {
     const promises = data.map(async (item) => {
         const dom = parse(temp.templateHtml);
 
@@ -25,7 +25,6 @@ const generateAndMail = async (data, temp, majorDetails, eventName, organization
             item,
             majorDetails.organizations,
             url,
-            email
         );
 
         return sent;
