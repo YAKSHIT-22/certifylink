@@ -46,11 +46,11 @@ const Home = () => {
               <DashboardHomeCard text={"Subscription Plan"} value={"Free"} />
             </div>
             <div className="w-full grid md:grid-cols-2 grid-cols-1 items-center justify-center gap-4">
-              <div className="w-full md:col-span-2 h-full lg:col-span-1 flex items-start justify-center gap-4 flex-col md:flex-row lg:flex-col">
+              <div className="w-full md:col-span-2 lg:col-span-1 flex items-start justify-center gap-4 flex-col md:flex-row lg:flex-col">
                 <AnalyticCard heading={"Most Template Used"} data={data.templates} type="template" />
                 <AnalyticCard heading={"Most Active Organisation"} data={data.org} type="org" />
               </div>
-              <div className="flex items-center justify-center text-white md:hidden lg:flex flex-col p-4 gap-4 w-full h-full rounded-md bg-[#181818] border border-[#222222]">
+              <div className="flex items-center justify-center text-white md:hidden lg:flex flex-col p-4 gap-4 w-full rounded-md bg-[#181818] border border-[#222222]">
                 <div className="flex items-center justify-center px-2 w-full flex-col gap-4">
                   <div className="flex items-center justify-center w-full">
                     <p className="text-2xl font-medium">Demo Video</p>

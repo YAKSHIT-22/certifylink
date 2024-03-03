@@ -6,11 +6,12 @@ import { Tooltip } from "@nextui-org/react";
 import icon from "../../components/svgExporter";
 import { publicApi } from "../../utils/app.utils";
 import toast from "react-hot-toast";
-import { useAuthStore, useEventsStore } from "../../store/masterStore";
+import { useAuthStore, useEventsStore, useOrganisationStore } from "../../store/masterStore";
 
 
 const columns = [
   { name: "Event ID", uid: "eventId" },
+  { name: "Organisation", uid: "organizationName" },
   { name: "Events Name", uid: "eventName" },
   { name: "Address", uid: "address" },
   { name: "Type", uid: "type" },
@@ -24,6 +25,7 @@ const Events = () => {
   const [reload, setReload] = useState(false);
   const [form, setForm] = useState({})
   const { events, setEvents } = useEventsStore(state => state);
+  const organization = useOrganisationStore(state => state.organization)
   const token = useAuthStore(state => state.token)
   async function handleActionsModal({ action, id = 0 }) {
     if (action === "edit") {
@@ -67,6 +69,7 @@ const Events = () => {
       return {
         ...e,
         eventId: e._id,
+        organizationName: e.organization.organizationName
       }
     })
   }, [events])
@@ -154,6 +157,12 @@ const Events = () => {
     const cellValue = user[columnKey];
     switch (columnKey) {
       case "eventId":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue}</p>
+          </div>
+        );
+      case "organization":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
@@ -316,6 +325,23 @@ const Events = () => {
                     onChange={handleInputChange}
                     value={form.eventName || ""}
                   />
+                </div>
+                <div className="relative flex items-center justify-center gap-2 w-full">
+                  <select
+                    name="organization"
+                    onChange={handleInputChange}
+                    value={form.organization || ""}
+                    className="flex bg-transparent text-sm w-full py-3 text-white border border-[#252525] rounded-[8px] focus:outline-none"
+                  >
+                    <option value="" disabled>
+                      Select Organisation
+                    </option>
+                    {organization.map((org) => (
+                      <option key={org._id} value={org._id}>
+                        {org.organizationName}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="relative flex items-center justify-center gap-2 w-full">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2">

@@ -80,9 +80,21 @@ const getTemplates = async (req, res) => {
                                         },
                                     },
                                     {
+                                        $lookup:{
+                                            from: "organizations",
+                                            localField: "organization",
+                                            foreignField: "_id",
+                                            as: "organization"
+                                        }
+                                    },
+                                    {
+                                        $unwind: "$organization"
+                                    },
+                                    {
                                         $project: {
                                             _id: 1,
                                             eventName: 1,
+                                            organization: "$organization.organizationName",
                                         },
                                     },
                                 ],
@@ -104,8 +116,6 @@ const getTemplates = async (req, res) => {
                                 _id: 1,
                                 templateName: 1,
                                 templateImage: 1,
-                                // organization: 1,
-                                // event: 1,
                             }
                         },
                         {
@@ -125,7 +135,7 @@ const getTemplates = async (req, res) => {
                 }
             }
         ])
-
+        console.log(data[0])
         res.status(200).json({
             message: "Data fetched",
             ...data[0]

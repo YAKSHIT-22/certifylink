@@ -1,8 +1,8 @@
 const Events = require("../models/eventSchema");
 
 const createEvent = async (req, res) => {
-    const { eventName, address, type, startDate, endDate } = req.body;
-    if (!eventName || !address || !type || !startDate || !endDate) {
+    const { eventName, address, type, startDate, endDate, organization } = req.body;
+    if (!eventName || !address || !type || !startDate || !endDate || !organization) {
         return res.status(400).json({
             message: "All fields are required",
         });
@@ -17,7 +17,7 @@ const createEvent = async (req, res) => {
     try {
         await (new Events({
             eventName,
-            address, type, startDate, endDate,
+            address, type, startDate, endDate, organization,
             createdBy: req.user
         })).save();
         const data = await Events.find({ createdBy: req.user })
@@ -34,7 +34,7 @@ const createEvent = async (req, res) => {
 const getEvent = async (req, res) => {
     const id = req.user;
     try {
-        const event = await Events.find({ createdBy: id })
+        const event = await Events.find({ createdBy: id }).populate("organization", "organizationName");
         res.status(200).json({
             message: "event fetched",
             data: event

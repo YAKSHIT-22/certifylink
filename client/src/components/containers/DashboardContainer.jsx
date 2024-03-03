@@ -29,7 +29,7 @@ const DashboardContainer = ({ children }) => {
     }
   }, [clearUser])
   return (
-    <main className="flex items-start justify-start w-full min-h-[100dvh] h-full">
+    <main className="flex items-start justify-start h-screen w-screen overflow-hidden">
       <div className="flex items-center justify-center w-full max-w-screen-2xl mx-auto min-h-[100dvh] md:py-0 pb-[8rem]">
         <div className="flex items-start justify-start w-full min-h-[100dvh] md:flex-row flex-col-reverse">
           <div className="flex items-center justify-center w-full h-full md:w-[15%] lg:w-[25%] xl:w-[15%]">

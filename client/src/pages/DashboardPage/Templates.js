@@ -50,6 +50,7 @@ const Templates = () => {
       [e.target.name]: e.target.value,
     });
   };
+  console.log(events)
   const handleSubmit = async () => {
     if (!form.template) {
       return toast.error("Select a template first!");
@@ -123,15 +124,25 @@ const Templates = () => {
                   <option disabled value="">
                     Select Event
                   </option>
-                  {events?.map((event) => (
-                    <option
-                      className="bg-[#181818]"
-                      key={event._id}
-                      value={event.eventName}
-                    >
-                      {event.eventName}
-                    </option>
-                  ))}
+                  {
+                    form.organizationName ?
+                      events
+                        ?.filter(
+                          (event) =>
+                            event.organization === form.organizationName
+                        )
+                        .map((event) => (
+                          <option
+                            className="bg-[#181818]"
+                            key={event._id}
+                            value={event.eventName}
+                          >
+                            {event.eventName}
+                          </option>
+                        )) : <option disabled value="">
+                        Select Organization First
+                      </option>
+                  }
                 </select>
               </div>
             </div>
@@ -161,7 +172,7 @@ const Templates = () => {
                   onClick={() => {
                     setForm({ ...form, template: temp._id });
                   }}
-                  className="flex items-center relative justify-center w-full h-full flex-col gap-3"
+                  className="flex items-center relative justify-center w-full flex-col gap-3"
                 >
                   <div className="flex w-full h-full items-center justify-center">
                     <img

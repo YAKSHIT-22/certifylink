@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const User = require("./userSchema")
 
 const organizationSchema = new mongoose.Schema({
      organizationName: {
