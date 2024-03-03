@@ -69,7 +69,6 @@ const Events = () => {
       return {
         ...e,
         eventId: e._id,
-        organizationName: e.organization.organizationName
       }
     })
   }, [events])
@@ -162,7 +161,7 @@ const Events = () => {
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "organization":
+      case "organizationName":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
