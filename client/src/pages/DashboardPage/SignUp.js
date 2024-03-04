@@ -3,7 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import login from "../../assets/login.svg";
 import { useAuthStore } from "../../store/masterStore";
 import { publicApi } from "../../utils/app.utils";
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import toast from "react-hot-toast";
 
 const SignUp = () => {
@@ -112,6 +112,15 @@ const SignUp = () => {
                         className="py-3 px-4 rounded-md border border-[#252525] bg-transparent text-[#cbcbcb] w-full focus:outline-none focus:ring-1 focus:ring-[#FFC947] focus:border-transparent"
                       />
                     </div>
+                    <div className="w-full flex justify-end">
+                      <p
+                        className="text-[#FFC947] text-sm flex items-center gap-1 font-light"
+                      >
+                        Already have an account? <Link to="/login" className="font-bold hover:underline focus:outline-none">
+                          SignIn
+                        </Link>
+                      </p>
+                    </div>
                   </div>
                   <div className="w-full h-full flex items-center justify-start">
                     <button className="bg-[#FFC947] text-white font-semibold px-12 rounded-md py-3 border-2 border-transparent hover:border-2 hover:border-[#FFC947] hover:text-[#FFC947] hover:bg-transparent transition-all duration-500 w-full flex items-center justify-center text-base">
@@ -119,7 +128,7 @@ const SignUp = () => {
                     </button>
                   </div>
                 </form>
-                <div className="w-full h-full gap-[1rem] flex items-center justify-center">
+                {/* <div className="w-full h-full gap-[1rem] flex items-center justify-center">
                   <span className="w-12 h-[1px] bg-[#CFDFE2] rounded-full"></span>
                   <p className="text-base font-light text-[#777777]">or</p>
                   <span className="w-12 h-[1px] bg-[#CFDFE2] rounded-full"></span>
@@ -133,7 +142,7 @@ const SignUp = () => {
                     <FcGoogle className="w-6 h-6" />
                     Sign in with Google
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
